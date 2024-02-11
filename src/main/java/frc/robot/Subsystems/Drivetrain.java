@@ -24,19 +24,19 @@ import frc.robot.Constants.*;
 public class Drivetrain extends SubsystemBase {
   public static final double kMaxSpeed = MiscMapping.MAXSPEED;
   public static final double kMaxAngularSpeed = MiscMapping.MAXANGULARSPEED;
-  // Wheel position offsets.
+  // Wheel position offsets. TODO: Update for Hermes drivetrain.
   private final Translation2d m_frontLeftLocation = new Translation2d(0.292, 0.292);
   private final Translation2d m_frontRightLocation = new Translation2d(0.292, -0.292);
   private final Translation2d m_backLeftLocation = new Translation2d(-0.292, 0.292);
   private final Translation2d m_backRightLocation = new Translation2d(-0.292, -0.292);
 
-  private final SwerveModule m_frontLeft = new SwerveModule(CANMapping.SPARKMAX_DRIVE_FL, CANMapping.TALONSRX_TURN_FL,
+  private final SwerveModule m_frontLeft = new SwerveModule(CANMapping.TALONFX_DRIVE_FL, CANMapping.SPARKMAX_TURN_FL,
       CANMapping.TURN_CANCODER_FL);
-  private final SwerveModule m_frontRight = new SwerveModule(CANMapping.SPARKMAX_DRIVE_FR, CANMapping.TALONSRX_TURN_FR,
+  private final SwerveModule m_frontRight = new SwerveModule(CANMapping.TALONFX_DRIVE_FR, CANMapping.SPARKMAX_TURN_FR,
       CANMapping.TURN_CANCODER_FR);
-  private final SwerveModule m_backLeft = new SwerveModule(CANMapping.SPARKMAX_DRIVE_BL, CANMapping.TALONSRX_TURN_BL,
+  private final SwerveModule m_backLeft = new SwerveModule(CANMapping.TALONFX_DRIVE_BL, CANMapping.SPARKMAX_TURN_BL,
       CANMapping.TURN_CANCODER_BL);
-  private final SwerveModule m_backRight = new SwerveModule(CANMapping.SPARKMAX_DRIVE_BR, CANMapping.TALONSRX_TURN_BR,
+  private final SwerveModule m_backRight = new SwerveModule(CANMapping.TALONFX_DRIVE_BR, CANMapping.SPARKMAX_TURN_BR,
       CANMapping.TURN_CANCODER_BR);
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.

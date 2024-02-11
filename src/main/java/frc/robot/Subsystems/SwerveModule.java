@@ -4,13 +4,11 @@
 
 package frc.robot.Subsystems;
 
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 //import com.ctre.phoenix.sensors.CANCoderConfiguration;
 //import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,9 +24,8 @@ public class SwerveModule {
   //private static final double kModuleMaxAngularAcceleration = 2 * Math.PI; // radians per second squared
 
   private double showTurnOutput;
-  private CANSparkMax m_driveMotor;
-  private RelativeEncoder m_driveEncoder;
-  private TalonSRX m_turningMotor;
+  private TalonFX m_driveMotor;
+  private CANSparkMax m_turningMotor;
 
   // private final CANSparkMax m_driveEncoder;
   private CANcoder m_turningEncoder;
@@ -65,14 +62,13 @@ public class SwerveModule {
       int driveMotor,
       int turningMotor,
       int turningEncoderChannel) {
-    m_driveMotor = new CANSparkMax(driveMotor, MotorType.kBrushless);
-    m_turningMotor = new TalonSRX(turningMotor);
+    m_driveMotor = new TalonFX(driveMotor);
+    m_turningMotor = new CANSparkMax(turningMotor, MotorType.kBrushless);
 
     // Factory reset, so we get the SPARK MAX to a known state before configuring
     // them. This is useful in case a SPARK MAX is swapped out.
     // m_driveMotor.restoreFactoryDefaults();
 
-    m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = new CANcoder(turningEncoderChannel);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
@@ -87,7 +83,7 @@ public class SwerveModule {
    */
   public SwerveModuleState getState() {
     return new SwerveModuleState(
-        m_driveEncoder.getVelocity(), getRotation());
+        m_driveMotor.getVelocity().getValueAsDouble(), getRotation());
   }
 
   /**
@@ -97,7 +93,7 @@ public class SwerveModule {
    */
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
-        m_driveEncoder.getPosition(), getRotation());
+        m_driveMotor.getPosition().getValueAsDouble(), getRotation());
   }
 
   public Rotation2d getRotation() {
@@ -138,7 +134,7 @@ public class SwerveModule {
     //final double turnFeedforward = m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
 
     m_driveMotor.set(driveOutput);
-    m_turningMotor.set(TalonSRXControlMode.PercentOutput, turnOutput);
+    m_turningMotor.set(turnOutput);
     //m_turningMotor.set(TalonSRXControlMode.PercentOutput, turnOutput + turnFeedforward);
   }
 }
