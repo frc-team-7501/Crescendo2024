@@ -14,6 +14,7 @@ import frc.robot.Subsystems.*;
 import frc.robot.utils.ExtendedJoystick;
 import frc.robot.utils.ExtendedXboxController;
 import frc.robot.Commands.*;
+import frc.robot.Commands.Autonomous.AutonLauncherCommand;
 import frc.robot.Constants.ControllerMapping;
 import frc.robot.Constants.MiscMapping;
 
@@ -36,7 +37,10 @@ public class RobotContainer {
   // #region Placeholder
   // Auton placeholder
   private final Command DefaultAuton = new SequentialCommandGroup(
-      new WaitCommand(7.501));
+    new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+      new WaitCommand(7.501),
+          new AutonLauncherCommand(launcher, 0));
+
   // #endregion
   // #endregion
 
