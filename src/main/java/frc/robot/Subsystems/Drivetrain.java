@@ -25,10 +25,10 @@ public class Drivetrain extends SubsystemBase {
   public static final double kMaxSpeed = MiscMapping.MAXSPEED;
   public static final double kMaxAngularSpeed = MiscMapping.MAXANGULARSPEED;
   // Wheel position offsets. TODO: Update for Hermes drivetrain.
-  private final Translation2d m_frontLeftLocation = new Translation2d(0.292, 0.292);
-  private final Translation2d m_frontRightLocation = new Translation2d(0.292, -0.292);
-  private final Translation2d m_backLeftLocation = new Translation2d(-0.292, 0.292);
-  private final Translation2d m_backRightLocation = new Translation2d(-0.292, -0.292);
+  private final Translation2d m_frontLeftLocation = new Translation2d(0.238, 0.238);
+  private final Translation2d m_frontRightLocation = new Translation2d(0.238, -0.238);
+  private final Translation2d m_backLeftLocation = new Translation2d(-0.238, 0.238);
+  private final Translation2d m_backRightLocation = new Translation2d(-0.238, -0.238);
 
   private final SwerveModule m_frontLeft = new SwerveModule(CANMapping.TALONFX_DRIVE_FL, CANMapping.SPARKMAX_TURN_FL,
       CANMapping.TURN_CANCODER_FL);

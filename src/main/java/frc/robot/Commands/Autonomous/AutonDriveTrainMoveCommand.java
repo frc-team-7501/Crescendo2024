@@ -5,46 +5,36 @@
 package frc.robot.Commands.Autonomous;
 
 import frc.robot.Subsystems.Drivetrain;
-import frc.robot.utils.SimpleControllerSlow;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class AutonDriveTrainMoveCommand extends Command {
 
-    private final SimpleControllerSlow controller;
-    private final DriveTrain driveTrain;
+    private final Drivetrain drivetrain;
     private double relativeSetpoint = 0;
     private double maxSpeed;
 
-    public AutonDriveTrainMoveCommand(DriveTrain driveTrain, double setpoint, double maxSpeed) {
-        this.driveTrain = driveTrain;
+    public AutonDriveTrainMoveCommand(Drivetrain drivetrain, double setpoint, double maxSpeed) {
+        this.drivetrain = drivetrain;
         this.relativeSetpoint = setpoint;
         this.maxSpeed = maxSpeed;
 
-        addRequirements(driveTrain);
-        controller = new SimpleControllerSlow(0.01, 0.05, driveTrain::getLeftDistance,
-                (output) -> driveTrain.drive(output, .056, true), maxSpeed);
-
-        controller.setTolerance(5);
+        addRequirements(drivetrain);
     }
 
     @Override
     public void initialize() {
-        controller.setSetpoint(driveTrain.getLeftDistance() + relativeSetpoint);
-        controller.enable();
     }
 
     @Override
     public void execute() {
-        controller.execute();
     }
 
     @Override
     public void end(boolean interrupted) {
-        controller.disable();
     }
 
     @Override
     public boolean isFinished() {
-        return controller.atSetpoint();
+        return true;
     }
 }

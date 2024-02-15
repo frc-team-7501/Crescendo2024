@@ -134,7 +134,7 @@ public class SwerveModule {
     //final double turnFeedforward = m_turnFeedforward.calculate(m_turningPIDController.getSetpoint().velocity);
 
     m_driveMotor.set(driveOutput);
-    m_turningMotor.set(turnOutput);
+    m_turningMotor.set(-turnOutput);
     //m_turningMotor.set(TalonSRXControlMode.PercentOutput, turnOutput + turnFeedforward);
   }
 }
