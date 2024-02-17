@@ -20,9 +20,12 @@ public final class Constants {
         public static final int TURN_CANCODER_FR = 41;
 
         // Other Motors
-        public static final int LAUNCH_TALON = 12;
-        public static final int HANDOFF_SPARKMAX = 14;
-        public static final int INTAKE_TALON = 11;
+        public static final int INTAKE_TALONSRX = 11;
+        public static final int HANDOFF_TALONFX = 12;
+        public static final int LAUNCH_SPARKMAX_T = 13;
+        public static final int LAUNCH_SPARKMAX_B = 14;
+        
+       
 
         // MISC CAN Bus
         public static final int PIGEON_IMU = 20;

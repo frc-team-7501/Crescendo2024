@@ -15,7 +15,7 @@ import frc.robot.Constants.CANMapping;
 import frc.robot.Constants.TalonMapping;
 
 public class Intake extends SubsystemBase {
-  private final TalonFX m_IntakeMotor = new TalonFX(CANMapping.INTAKE_TALON);
+  private final TalonFX m_IntakeMotor = new TalonFX(CANMapping.INTAKE_TALONSRX);
   private static Intake instance;
 
   private final VelocityVoltage m_voltageVelocity = new VelocityVoltage(0);

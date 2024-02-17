@@ -4,15 +4,12 @@
 
 package frc.robot.Subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANMapping;
 
 public class Handoff extends SubsystemBase {
-  private final CANSparkMax m_HandoffMotor = new CANSparkMax(CANMapping.HANDOFF_SPARKMAX, MotorType.kBrushless);
+  private final TalonFX m_HandoffMotor = new TalonFX(CANMapping.HANDOFF_TALONFX);
   private static Handoff instance;
 
   /** Creates a new Handoff. */
