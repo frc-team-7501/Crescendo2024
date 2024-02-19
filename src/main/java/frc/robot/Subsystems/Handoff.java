@@ -4,12 +4,13 @@
 
 package frc.robot.Subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANMapping;
 
 public class Handoff extends SubsystemBase {
-  private final TalonFX m_HandoffMotor = new TalonFX(CANMapping.HANDOFF_TALONFX);
+  private final TalonSRX m_HandoffMotor = new TalonSRX(CANMapping.HANDOFF_TALONSRX);
   private static Handoff instance;
 
   /** Creates a new Handoff. */
@@ -22,7 +23,7 @@ public class Handoff extends SubsystemBase {
   }
 
   public void fireHandoff(double HandoffPower) {
-    m_HandoffMotor.set(HandoffPower);
+    m_HandoffMotor.set(TalonSRXControlMode.PercentOutput, HandoffPower);
   }
 
   @Override
@@ -31,6 +32,6 @@ public class Handoff extends SubsystemBase {
   }
 
   public void stop() {
-    m_HandoffMotor.stopMotor();
+    m_HandoffMotor.set(TalonSRXControlMode.PercentOutput, 0);
   }
 }
