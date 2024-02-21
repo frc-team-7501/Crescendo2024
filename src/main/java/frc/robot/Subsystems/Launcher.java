@@ -66,8 +66,8 @@ public class Launcher extends SubsystemBase {
   public void fireLauncher(double velocity) {
     m_LaunchMotorT.set(velocity);
     SmartDashboard.putNumber("Top Velocity", velocity);
-    m_LaunchMotorB.set(-velocity);
-    SmartDashboard.putNumber("Bottom Velocity", -velocity);
+    m_LaunchMotorB.set(velocity);
+    SmartDashboard.putNumber("Bottom Velocity", velocity);
     //  m_LaunchMotor.setControl(m_voltageVelocity.withVelocity(velocity));
     //  SmartDashboard.putNumber("velocity", velocity);
   }

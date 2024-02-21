@@ -28,7 +28,7 @@ public final class Constants {
 
         // MISC CAN Bus
         public static final int PIGEON_IMU = 20;
-        // public static final int PNEUMATIC_HUB = 5;
+        public static final int PNEUMATIC_HUB = 5;
     }
 
     public static final class ControllerMapping {
@@ -48,9 +48,11 @@ public final class Constants {
         public static final boolean FIELD_RELATIVE = true;
         public static final double MAXSPEED = 0.7;
         public static final double MAXANGULARSPEED = 0.8;
-        public static final double LAUNCH_VELOCITY = 0.2;
+        public static final double LAUNCH_VELOCITY = 0.6;
         public static final double INTAKE_VELOCITY = -25;
         public static final double HANDOFF_SPEED = 0.3;
+        public static final double ARM_PID_TOLERANCE = 0.05;
+
 
     }
 

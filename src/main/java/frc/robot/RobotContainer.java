@@ -27,6 +27,8 @@ public class RobotContainer {
   private final Launcher launcher = Launcher.getInstance();
   private final Intake intake = Intake.getInstance();
   private final Handoff handoff = Handoff.getInstance();
+  private final IntakeExtend intakeExtend = IntakeExtend.getInstance();
+  private final ArmLift armLift = ArmLift.getInstance();
   
   public double XPosition;
   public double YPosition;
@@ -80,6 +82,10 @@ public class RobotContainer {
 
     m_Xbox.b_X().onTrue(new HandoffControlCommand(handoff, MiscMapping.HANDOFF_SPEED));
     m_Xbox.b_X().onFalse(new HandoffControlCommand(handoff, 0.0));
+  
+    m_Xbox.b_Y().onTrue(new IntakeExtendInstantCommand(intakeExtend));
+    //m_Xbox.b_Y().onTrue(new ArmLiftPIDControlCommand(armLift, 0.6));
+    //m_Xbox.b_Y().onFalse(new ArmLiftPIDControlCommand(armLift, 0.8));
   }
 
   public void teleopInit() {
