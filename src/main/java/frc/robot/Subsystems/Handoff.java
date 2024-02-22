@@ -6,15 +6,20 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANMapping;
+import frc.robot.Constants.DIOMapping;
 
 public class Handoff extends SubsystemBase {
   private final TalonSRX m_HandoffMotor = new TalonSRX(CANMapping.HANDOFF_TALONSRX);
   private static Handoff instance;
+  private DigitalInput handoffSensor = new DigitalInput(DIOMapping.HANDOFF_SENSOR);
 
   /** Creates a new Handoff. */
-  public Handoff() {}
+  public Handoff() {
+  }
 
   public static Handoff getInstance() {
     if (instance == null)
@@ -22,8 +27,14 @@ public class Handoff extends SubsystemBase {
     return instance;
   }
 
-  public void fireHandoff(double HandoffPower) {
-    m_HandoffMotor.set(TalonSRXControlMode.PercentOutput, HandoffPower);
+  public void fireHandoff(double HandoffPower, boolean override) {
+    if (override){
+      m_HandoffMotor.set(TalonSRXControlMode.PercentOutput, HandoffPower);
+    } else if (!handoffSensor.get()){
+      m_HandoffMotor.set(TalonSRXControlMode.PercentOutput, 0.0);
+    } else {
+      m_HandoffMotor.set(TalonSRXControlMode.PercentOutput, HandoffPower);
+    }
   }
 
   @Override

@@ -51,11 +51,11 @@ public class IntakeExtend extends SubsystemBase {
   public void IntakeOut() {
     if (extendSolenoid.get()) {
       IntakeIn();
-      SmartDashboard.putBoolean("Call", true);
+      //SmartDashboard.putBoolean("Call", true);
     } else {
       retractSolenoid.set(false);
       extendSolenoid.set(true);
-      SmartDashboard.putBoolean("Call", false);
+      //SmartDashboard.putBoolean("Call", false);
     }
   }
   

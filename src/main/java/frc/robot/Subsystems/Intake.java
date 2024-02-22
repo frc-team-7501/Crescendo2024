@@ -4,19 +4,23 @@
 
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANMapping;
 import frc.robot.Constants.TalonMapping;
+import frc.robot.Constants.DIOMapping;
 
 public class Intake extends SubsystemBase {
   private final TalonFX m_IntakeMotor = new TalonFX(CANMapping.INTAKE_TALONSRX);
   private static Intake instance;
+  //private DigitalInput handoffSensor = new DigitalInput(DIOMapping.HANDOFF_SENSOR);
 
   private final VelocityVoltage m_voltageVelocity = new VelocityVoltage(0);
 
@@ -58,7 +62,11 @@ public class Intake extends SubsystemBase {
   }
 
   public void runIntake(double velocity) {
-    m_IntakeMotor.setControl(m_voltageVelocity.withVelocity(velocity));
+//if (!handoffSensor.get()) {
+  //    m_IntakeMotor.setControl(m_voltageVelocity.withVelocity(0.0));
+    //} else {
+      m_IntakeMotor.setControl(m_voltageVelocity.withVelocity(velocity));
+    //}
     SmartDashboard.putNumber("velocity", velocity);
   }
 

@@ -12,11 +12,13 @@ public class HandoffControlCommand extends Command {
   /** Creates a new LaunchCommand. */
   private final Handoff Handoff;
   private double handoffSpeed;
+  private boolean override;
 
-  public HandoffControlCommand(Handoff handoff, Double handoffSpeed) {
+  public HandoffControlCommand(Handoff handoff, Double handoffSpeed, boolean override) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.Handoff = handoff;
     this.handoffSpeed = handoffSpeed;
+    this.override = override;
     addRequirements(handoff);
   }
 
@@ -28,7 +30,7 @@ public class HandoffControlCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Handoff.fireHandoff(handoffSpeed);
+    Handoff.fireHandoff(handoffSpeed, override);
   }
 
   // Called once the command ends or is interrupted.

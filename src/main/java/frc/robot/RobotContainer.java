@@ -6,14 +6,23 @@ package frc.robot;
 
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-//import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 //import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Subsystems.*;
 import frc.robot.utils.ExtendedJoystick;
 import frc.robot.utils.ExtendedXboxController;
-import frc.robot.Commands.*;
+import frc.robot.Commands.ArmLiftPIDControlCommand;
+import frc.robot.Commands.HandoffControlCommand;
+import frc.robot.Commands.IntakeControlCommand;
+import frc.robot.Commands.IntakeExtendInstantCommand;
+import frc.robot.Commands.LaunchControlCommand;
+import frc.robot.Commands.ResetGyroYawInstantCommand;
+import frc.robot.Commands.SwerveDriveManualCommand;
 import frc.robot.Commands.Autonomous.AutonLauncherCommand;
 import frc.robot.Constants.ControllerMapping;
 import frc.robot.Constants.MiscMapping;
@@ -33,6 +42,7 @@ public class RobotContainer {
   public double XPosition;
   public double YPosition;
   public double ZPosition;
+  public boolean ArmLiftRunnable;
 
   ////////////////////////////////
   // #region [ AUTON COMMANDS ]
@@ -47,12 +57,9 @@ public class RobotContainer {
   // #endregion
 
   // Create commands
-  //private final Command swerveDriveManualCommand = new SwerveDriveManualCommand(
-  //    driveTrain,
-  //    () -> XPosition,
-  //    () -> YPosition,
-  //    () -> ZPosition,
-  //    () -> MiscMapping.FIELD_RELATIVE);
+  //private final Command armLiftPIDControlCommand = new ArmLiftPIDControlCommand(
+  //    armLift,
+  //    () -> MiscMapping.ARM_UP_POSITION);
   
   private final Command swerveDriveManualCommand = new SwerveDriveManualCommand(
       driveTrain,
@@ -77,19 +84,29 @@ public class RobotContainer {
     m_Xbox.b_B().onTrue(new LaunchControlCommand(launcher, MiscMapping.LAUNCH_VELOCITY));
     m_Xbox.b_B().onFalse(new LaunchControlCommand(launcher, 0.0));
 
-    m_Xbox.b_A().onTrue(new IntakeControlCommand(intake, MiscMapping.INTAKE_VELOCITY));
-    m_Xbox.b_A().onFalse(new IntakeControlCommand(intake, 0.0));
+    m_Xbox.b_A().onTrue(new ParallelCommandGroup(
+      new IntakeControlCommand(intake, MiscMapping.INTAKE_VELOCITY),
+      new HandoffControlCommand(handoff, MiscMapping.HANDOFF_SPEED),
+      new ArmLiftPIDControlCommand(armLift, 0.8)));
+
+    m_Xbox.b_A().onFalse(new ParallelCommandGroup(
+      new IntakeControlCommand(intake, 0.0),
+      new HandoffControlCommand(handoff, 0.0),
+      new ArmLiftPIDControlCommand(armLift, 0.6)));
 
     m_Xbox.b_X().onTrue(new HandoffControlCommand(handoff, MiscMapping.HANDOFF_SPEED));
     m_Xbox.b_X().onFalse(new HandoffControlCommand(handoff, 0.0));
   
     m_Xbox.b_Y().onTrue(new IntakeExtendInstantCommand(intakeExtend));
-    //m_Xbox.b_Y().onTrue(new ArmLiftPIDControlCommand(armLift, 0.6));
-    //m_Xbox.b_Y().onFalse(new ArmLiftPIDControlCommand(armLift, 0.8));
+    //m_Xbox.b_Y().onTrue(new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_DOWN_POSITION));
+    //m_Xbox.b_Y().onFalse(new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION));
   }
 
   public void teleopInit() {
     driveTrain.setBrakeMode(MiscMapping.BRAKE_OFF);
+    intakeExtend.IntakeIn();
+    //CommandScheduler.getInstance().schedule(ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION));
+    new ParallelCommandGroup(new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION));
   }
 
   public void autonomousInit() {

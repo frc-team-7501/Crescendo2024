@@ -20,13 +20,9 @@ public class IntakeExtendInstantCommand extends InstantCommand {
     this.intakeExtend = intakeExtend;
   }
 
-  @Override
-  public void execute() {
-    intakeExtend.IntakeOut();
-  }
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  //  intakeExtend.IntakeIn();
+    intakeExtend.IntakeOut();
   }
 }

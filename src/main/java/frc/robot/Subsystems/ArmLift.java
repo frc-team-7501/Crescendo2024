@@ -11,17 +11,16 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANMapping;
+import frc.robot.Constants.DIOMapping;
 
 public class ArmLift extends SubsystemBase {
   private final CANSparkMax m_ArmLiftMotor = new CANSparkMax(CANMapping.INTAKE_SPARKMAX_LIFT, MotorType.kBrushless);
   private static ArmLift instance;
 
-  DutyCycleEncoder encoder = new DutyCycleEncoder(2);
+  DutyCycleEncoder encoder = new DutyCycleEncoder(DIOMapping.ARM_LIFT_ENCODER);
 
-  /** Creates a new IntakeLift. */
-  public ArmLift() {
-
-  }
+  /** Creates a new ArmLift. */
+  public ArmLift() {}
 
   public double getArmPosition () {
     return encoder.getAbsolutePosition();
@@ -35,9 +34,7 @@ public class ArmLift extends SubsystemBase {
 
   public void moveArm (double speed) {
     SmartDashboard.putNumber("Arm PID Speed", speed);
-    //speed = Math.min(Math.max(speed, 0.3), -0.3);
     m_ArmLiftMotor.set(speed);
-    //SmartDashboard.putNumber("Arm PID Speed Post", speed);
   }
 
   @Override
