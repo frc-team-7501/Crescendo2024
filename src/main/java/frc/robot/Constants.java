@@ -61,6 +61,7 @@ public final class Constants {
         public static final double ARM_PID_TOLERANCE = 0.05;
         public static final double ARM_UP_POSITION = 0.6;
         public static final double ARM_DOWN_POSITION = 0.8;
+        public static final double AMP_VELOCITY = 10;
     }
 
     public static final class TalonMapping {

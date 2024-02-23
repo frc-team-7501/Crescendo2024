@@ -33,34 +33,21 @@ public class IntakeExtend extends SubsystemBase {
   public IntakeExtend() {}
 
   public void IntakeIn() {
-    // Schedules code to be delivered without disrupting other code
-    //final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-
     extendSolenoid.set(false);
     retractSolenoid.set(true);
-
-    // Waits a second without stopping any other code
-    /*final Runnable retract = new Runnable(){
-      public void run(){
-        retractSolenoid.set(false);
-      }
-    };
-    executorService.schedule(retract, 1000, TimeUnit.MILLISECONDS);*/
   }
 
   public void IntakeOut() {
     if (extendSolenoid.get()) {
       IntakeIn();
-      //SmartDashboard.putBoolean("Call", true);
     } else {
       retractSolenoid.set(false);
       extendSolenoid.set(true);
-      //SmartDashboard.putBoolean("Call", false);
     }
   }
   
   public void stop() {
-    IntakeOut();
+    IntakeIn();
   }
 
   @Override

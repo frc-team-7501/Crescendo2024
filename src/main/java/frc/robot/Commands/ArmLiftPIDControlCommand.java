@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.MiscMapping;
 import frc.robot.Subsystems.ArmLift;
+import frc.robot.Subsystems.Sensors;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -16,12 +17,12 @@ public class ArmLiftPIDControlCommand extends PIDCommand {
   private final ArmLift armLift;
 
   /** Creates a new ArmLiftPIDControlCommand. */
-  public ArmLiftPIDControlCommand(final ArmLift armLift, final double position) {
+  public ArmLiftPIDControlCommand(final ArmLift armLift, final double position, final Sensors sensors) {
     super(
         // The controller that the command will use
         new PIDController(2.5, 0.5, 0),
         // This should return the measurement
-        () -> armLift.getArmPosition(),
+        () -> sensors.getArmEncoderAbsolute(),
         // This should return the setpoint (can also be a constant)
         () -> position,
         // This uses the output

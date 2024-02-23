@@ -17,14 +17,8 @@ public class ArmLift extends SubsystemBase {
   private final CANSparkMax m_ArmLiftMotor = new CANSparkMax(CANMapping.INTAKE_SPARKMAX_LIFT, MotorType.kBrushless);
   private static ArmLift instance;
 
-  DutyCycleEncoder encoder = new DutyCycleEncoder(DIOMapping.ARM_LIFT_ENCODER);
-
   /** Creates a new ArmLift. */
   public ArmLift() {}
-
-  public double getArmPosition () {
-    return encoder.getAbsolutePosition();
-  }
 
   public static ArmLift getInstance() {
     if (instance == null)
@@ -40,7 +34,6 @@ public class ArmLift extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Arm Position", getArmPosition());
   }
 
   public void stop() {
