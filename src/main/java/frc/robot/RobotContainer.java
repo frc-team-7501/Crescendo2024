@@ -24,6 +24,7 @@ import frc.robot.Commands.ResetGyroYawInstantCommand;
 import frc.robot.Commands.SetDeliverySelectorInstantCommand;
 import frc.robot.Commands.SwerveDriveManualCommand;
 import frc.robot.Commands.Autonomous.AutonHandoffCommand;
+import frc.robot.Commands.Autonomous.AutonIntakeCommand;
 import frc.robot.Commands.Autonomous.AutonLauncherCommand;
 import frc.robot.Constants.ControllerMapping;
 import frc.robot.Constants.MiscMapping;
@@ -53,9 +54,20 @@ public class RobotContainer {
   private final Command DefaultAuton = new SequentialCommandGroup(
       new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
       new WaitCommand(1.5),
-      new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED),
+      new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true),
       new WaitCommand(1.0),
-      new AutonHandoffCommand(handoff, 0.0),
+      new AutonHandoffCommand(handoff, 0.0, sensors, true),
+      new AutonLauncherCommand(launcher, 0.0),
+      new ParallelCommandGroup(
+        new AutonIntakeCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors),
+        new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true)),
+      new AutonIntakeCommand(intake, 0.0, sensors),
+      new AutonHandoffCommand(handoff, 0.0, sensors, false),
+      new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+      new WaitCommand(1.5),
+      new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true),
+      new WaitCommand(1.0),
+      new AutonHandoffCommand(handoff, 0.0, sensors, true),
       new AutonLauncherCommand(launcher, 0.0));
 
   // #endregion
@@ -105,8 +117,12 @@ public class RobotContainer {
     m_Xbox2.b_B().onTrue(new LaunchControlCommand(launcher, MiscMapping.LAUNCH_VELOCITY));
     m_Xbox2.b_B().onFalse(new LaunchControlCommand(launcher, 0.0));
 
-    m_Xbox2.b_RightBumper().onTrue(new HandoffControlCommand(handoff, sensors, MiscMapping.HANDOFF_SPEED, true));
-    m_Xbox2.b_RightBumper().onFalse(new HandoffControlCommand(handoff, sensors, 0.0, false));
+    m_Xbox2.b_RightBumper().onTrue(new ParallelCommandGroup
+    (new HandoffControlCommand(handoff, sensors, MiscMapping.HANDOFF_SPEED, true),
+    new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors)));
+    m_Xbox2.b_RightBumper().onFalse(new ParallelCommandGroup
+    (new HandoffControlCommand(handoff, sensors, 0.0, false),
+    new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors)));
 
     // Button commands to control for AMP.
     m_Xbox2.b_Y().onTrue(new IntakeExtendInstantCommand(intakeExtend, sensors));

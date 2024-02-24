@@ -12,6 +12,7 @@ import frc.robot.Constants.DIOMapping;
 
 public class Sensors extends SubsystemBase {
   /** Creates a new Sensors. */
+  private DigitalInput handoffSpeedSensor = new DigitalInput(DIOMapping.HANDOFF_SPEED_SENSOR);
   private DigitalInput handoffSensor = new DigitalInput(DIOMapping.HANDOFF_SENSOR);
   private DigitalInput intakeSensor = new DigitalInput(DIOMapping.INTAKE_SENSOR);
   private DutyCycleEncoder armEncoder = new DutyCycleEncoder(DIOMapping.ARM_LIFT_ENCODER);
@@ -33,11 +34,15 @@ public class Sensors extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("HandOff Sensor", getHandOffSensor());
+    SmartDashboard.putBoolean("Handoff Sensor", getHandOffSensor());
     SmartDashboard.putBoolean("Intake Sensor", getIntakeSensor());
     SmartDashboard.putBoolean("Delivery Selector", getDeliverySelector());
     SmartDashboard.putNumber("Arm Position", getArmEncoderAbsolute());
-    
+    SmartDashboard.putBoolean("Handoff Speed Sensor", getHandOffSpeedSensor());
+  }
+
+  public boolean getHandOffSpeedSensor() {
+    return !handoffSpeedSensor.get();
   }
 
   public boolean getHandOffSensor() {

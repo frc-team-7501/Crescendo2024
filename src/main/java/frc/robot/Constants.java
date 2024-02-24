@@ -46,7 +46,7 @@ public final class Constants {
         public static final int INTAKE_SENSOR = 0;
         public static final int HANDOFF_SENSOR = 1;
         public static final int ARM_LIFT_ENCODER = 2;
-
+        public static final int HANDOFF_SPEED_SENSOR = 3;
     }
 
     public static final class MiscMapping {
@@ -57,9 +57,9 @@ public final class Constants {
         public static final double MAXANGULARSPEED = 0.8;
         public static final double LAUNCH_VELOCITY = 0.6;
         public static final double INTAKE_VELOCITY = -25;
-        public static final double HANDOFF_SPEED = 0.3;
+        public static final double HANDOFF_SPEED = 0.5;
         public static final double ARM_PID_TOLERANCE = 0.05;
-        public static final double ARM_UP_POSITION = 0.56;
+        public static final double ARM_UP_POSITION = 0.6;
         public static final double ARM_DOWN_POSITION = 0.8;
         public static final double AMP_VELOCITY = 20;
     }
