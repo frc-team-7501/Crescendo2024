@@ -23,6 +23,7 @@ import frc.robot.Commands.LaunchControlCommand;
 import frc.robot.Commands.ResetGyroYawInstantCommand;
 import frc.robot.Commands.SetDeliverySelectorInstantCommand;
 import frc.robot.Commands.SwerveDriveManualCommand;
+import frc.robot.Commands.Autonomous.AutonHandoffCommand;
 import frc.robot.Commands.Autonomous.AutonLauncherCommand;
 import frc.robot.Constants.ControllerMapping;
 import frc.robot.Constants.MiscMapping;
@@ -51,8 +52,11 @@ public class RobotContainer {
   // Auton placeholder
   private final Command DefaultAuton = new SequentialCommandGroup(
       new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
-      new WaitCommand(7.501),
-      new AutonLauncherCommand(launcher, 0));
+      new WaitCommand(1.5),
+      new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED),
+      new WaitCommand(1.0),
+      new AutonHandoffCommand(handoff, 0.0),
+      new AutonLauncherCommand(launcher, 0.0));
 
   // #endregion
   // #endregion

@@ -5,17 +5,17 @@
 package frc.robot.Commands.Autonomous;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.Launcher;
+import frc.robot.Subsystems.Handoff;
 
-public class AutonLauncherCommand extends Command {
-  private Launcher launcher;
-  private double velocity;
-  /** Creates a new AutonLauncherCommand. */
-  public AutonLauncherCommand(final Launcher launcher, final double velocity) {
+public class AutonHandoffCommand extends Command {
+  private Handoff handoff;
+  private double handoffSpeed;
+  /** Creates a new AutonHandoffCommand. */
+  public AutonHandoffCommand(final Handoff handoff, final double handoffSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(launcher);
-    this.launcher = launcher;
-    this.velocity = velocity;
+    addRequirements(handoff);
+    this.handoff = handoff;
+    this.handoffSpeed = handoffSpeed;
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +25,7 @@ public class AutonLauncherCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    launcher.fireLauncher(velocity);
+    handoff.fireHandoff(handoffSpeed, false, false);
   }
 
   // Called once the command ends or is interrupted.
