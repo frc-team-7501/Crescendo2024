@@ -32,8 +32,8 @@ public final class Constants {
     }
 
     public static final class ControllerMapping {
-        public static final int JOYSTICK = 1;
         public static final int XBOX = 0;
+        public static final int XBOX2 = 1;
     }
 
     public static final class PneumaticsMapping {
@@ -59,9 +59,9 @@ public final class Constants {
         public static final double INTAKE_VELOCITY = -25;
         public static final double HANDOFF_SPEED = 0.3;
         public static final double ARM_PID_TOLERANCE = 0.05;
-        public static final double ARM_UP_POSITION = 0.6;
+        public static final double ARM_UP_POSITION = 0.56;
         public static final double ARM_DOWN_POSITION = 0.8;
-        public static final double AMP_VELOCITY = 10;
+        public static final double AMP_VELOCITY = 20;
     }
 
     public static final class TalonMapping {

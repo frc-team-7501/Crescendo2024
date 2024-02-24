@@ -30,7 +30,13 @@ public class IntakeControlCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Intake.runIntake(intakeSpeedDouble, sensors.getHandOffSensor());
+    if (sensors.getDeliverySelector()) {
+      Intake.runIntake(intakeSpeedDouble, sensors.getHandOffSensor());
+    } else if (intakeSpeedDouble > 0) {
+      Intake.runIntake(intakeSpeedDouble, false);
+    } else {
+      Intake.runIntake(intakeSpeedDouble, sensors.getIntakeSensor());
+    }
   }
 
   // Called once the command ends or is interrupted.

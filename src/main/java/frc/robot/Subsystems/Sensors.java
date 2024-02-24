@@ -15,10 +15,13 @@ public class Sensors extends SubsystemBase {
   private DigitalInput handoffSensor = new DigitalInput(DIOMapping.HANDOFF_SENSOR);
   private DigitalInput intakeSensor = new DigitalInput(DIOMapping.INTAKE_SENSOR);
   private DutyCycleEncoder armEncoder = new DutyCycleEncoder(DIOMapping.ARM_LIFT_ENCODER);
+  private boolean deliverySelector;
   private static Sensors instance;
 
-  public Sensors() {
 
+  public Sensors() {
+  //Set the default delivery method to Launcher.
+    deliverySelector = true;
   }
 
   public static Sensors getInstance() {
@@ -32,7 +35,9 @@ public class Sensors extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("HandOff Sensor", getHandOffSensor());
     SmartDashboard.putBoolean("Intake Sensor", getIntakeSensor());
+    SmartDashboard.putBoolean("Delivery Selector", getDeliverySelector());
     SmartDashboard.putNumber("Arm Position", getArmEncoderAbsolute());
+    
   }
 
   public boolean getHandOffSensor() {
@@ -41,6 +46,14 @@ public class Sensors extends SubsystemBase {
 
   public boolean getIntakeSensor() {
     return !intakeSensor.get();
+  }
+
+  public boolean getDeliverySelector() {
+    return deliverySelector;
+  }
+
+  public void setDeliverySelector(boolean selector) {
+  deliverySelector = selector;
   }
 
   public double getArmEncoderAbsolute() {

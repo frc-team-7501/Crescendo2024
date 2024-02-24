@@ -6,6 +6,7 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Handoff;
+import frc.robot.Subsystems.Intake;
 //import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Sensors;
 
@@ -33,7 +34,11 @@ public class HandoffControlCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Handoff.fireHandoff(handoffSpeed, override, sensors.getHandOffSensor());
+     if (sensors.getDeliverySelector()) {
+      Handoff.fireHandoff(handoffSpeed, override, sensors.getHandOffSensor());
+    } else {
+      Handoff.fireHandoff(handoffSpeed, override, sensors.getIntakeSensor());
+    }
   }
 
   // Called once the command ends or is interrupted.

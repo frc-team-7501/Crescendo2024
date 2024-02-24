@@ -21,6 +21,7 @@ import frc.robot.Commands.IntakeExtendInstantCommand;
 import frc.robot.Commands.IntakeRetractInstantCommand;
 import frc.robot.Commands.LaunchControlCommand;
 import frc.robot.Commands.ResetGyroYawInstantCommand;
+import frc.robot.Commands.SetDeliverySelectorInstantCommand;
 import frc.robot.Commands.SwerveDriveManualCommand;
 import frc.robot.Commands.Autonomous.AutonLauncherCommand;
 import frc.robot.Constants.ControllerMapping;
@@ -28,7 +29,7 @@ import frc.robot.Constants.MiscMapping;
 
 public class RobotContainer {
   private final ExtendedXboxController m_Xbox = new ExtendedXboxController(ControllerMapping.XBOX);
-  private final ExtendedXboxController m_Xbox2 = new ExtendedXboxController(ControllerMapping.XBOX);
+  private final ExtendedXboxController m_Xbox2 = new ExtendedXboxController(ControllerMapping.XBOX2);
 
   // create subsystems
   private final Drivetrain driveTrain = Drivetrain.getInstance();
@@ -80,11 +81,13 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     // Back button on the drive controller resets gyroscope.
-    m_Xbox2.b_Back().onTrue(new ResetGyroYawInstantCommand(driveTrain));
+    m_Xbox.b_Back().onTrue(new ResetGyroYawInstantCommand(driveTrain));
 
-    // Button commands to intake the note
+    // Button commands to intake the note.
     m_Xbox2.b_A().onTrue(new ParallelCommandGroup(
-        new IntakeControlCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors),
+        new SequentialCommandGroup(
+            new WaitCommand(0.7),
+            new IntakeControlCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors)),
         new HandoffControlCommand(handoff, sensors, MiscMapping.HANDOFF_SPEED, false),
         new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_DOWN_POSITION, sensors),
         new IntakeRetractInstantCommand(intakeExtend, sensors)));
@@ -94,14 +97,14 @@ public class RobotContainer {
         new HandoffControlCommand(handoff, sensors, 0.0, false),
         new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors)));
 
-    // Button commands to launch the note
+    // Button commands to launch the note.
     m_Xbox2.b_B().onTrue(new LaunchControlCommand(launcher, MiscMapping.LAUNCH_VELOCITY));
     m_Xbox2.b_B().onFalse(new LaunchControlCommand(launcher, 0.0));
 
     m_Xbox2.b_RightBumper().onTrue(new HandoffControlCommand(handoff, sensors, MiscMapping.HANDOFF_SPEED, true));
     m_Xbox2.b_RightBumper().onFalse(new HandoffControlCommand(handoff, sensors, 0.0, false));
 
-    // Button commands to control for AMP
+    // Button commands to control for AMP.
     m_Xbox2.b_Y().onTrue(new IntakeExtendInstantCommand(intakeExtend, sensors));
 
     m_Xbox2.b_LeftBumper()
@@ -109,6 +112,10 @@ public class RobotContainer {
             new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors)));
     m_Xbox2.b_LeftBumper().onFalse(new ParallelCommandGroup(new IntakeControlCommand(intake, 0.0, sensors),
         new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors)));
+
+    // Chose either to deliver at the Amp or Speaker.
+    m_Xbox.b_A().onTrue(new SetDeliverySelectorInstantCommand(sensors, false)); // Speaker
+    m_Xbox.b_B().onTrue(new SetDeliverySelectorInstantCommand(sensors, true)); // Amp
   }
 
   public void teleopInit() {
