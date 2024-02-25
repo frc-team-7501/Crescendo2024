@@ -9,8 +9,8 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.*;
 
 /** Represents a swerve drive style drivetrain. */
@@ -25,10 +26,6 @@ public class Drivetrain extends SubsystemBase {
   public static final double kMaxSpeed = MiscMapping.MAXSPEED;
   public static final double kMaxAngularSpeed = MiscMapping.MAXANGULARSPEED;
   // Wheel position offsets.
-  private final Translation2d m_frontLeftLocation = new Translation2d(0.238, 0.238);
-  private final Translation2d m_frontRightLocation = new Translation2d(0.238, -0.238);
-  private final Translation2d m_backLeftLocation = new Translation2d(-0.238, 0.238);
-  private final Translation2d m_backRightLocation = new Translation2d(-0.238, -0.238);
 
   private final SwerveModule m_frontLeft = new SwerveModule(CANMapping.TALONFX_DRIVE_FL, CANMapping.SPARKMAX_TURN_FL,
       CANMapping.TURN_CANCODER_FL);
@@ -54,11 +51,8 @@ public class Drivetrain extends SubsystemBase {
     return instance;
   }
 
-  private final SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-      m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
-
   private final SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
-      m_kinematics,
+      Constants.DriveTrain.KINEMATICS,
       getGyroYaw2d(),
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
@@ -95,6 +89,10 @@ public class Drivetrain extends SubsystemBase {
     return Rotation2d.fromDegrees(ypr[0]);
   }
 
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
+
   /**
    * Method to drive the robot using joystick info.
    *
@@ -109,21 +107,18 @@ public class Drivetrain extends SubsystemBase {
 
     // Get the y speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
-    final var xSpeed = -m_yspeedLimiter.calculate(MathUtil.applyDeadband(forward, 0.02))
-        * Drivetrain.kMaxSpeed;
+    final var xSpeed = -m_yspeedLimiter.calculate(MathUtil.applyDeadband(forward, 0.02)) * Drivetrain.kMaxSpeed;
 
     // Get the x speed or sideways/strafe speed. We are inverting this because
     // we want a positive value when we pull to the left. Xbox controllers
     // return positive values when you pull to the right by default.
-    final var ySpeed = -m_xspeedLimiter.calculate(MathUtil.applyDeadband(strafe, 0.02))
-        * Drivetrain.kMaxSpeed;
+    final var ySpeed = -m_xspeedLimiter.calculate(MathUtil.applyDeadband(strafe, 0.02)) * Drivetrain.kMaxSpeed;
 
     // Get the rate of angular rotation. We are inverting this because we want a
     // positive value when we pull to the left (remember, CCW is positive in
     // mathematics). Xbox controllers return positive values when you pull to
     // the right by default.
-    final var rot = -m_rotLimiter.calculate(MathUtil.applyDeadband(rotate, 0.02))
-        * Drivetrain.kMaxAngularSpeed;
+    final var rot = -m_rotLimiter.calculate(MathUtil.applyDeadband(rotate, 0.02)) * Drivetrain.kMaxAngularSpeed;
 
     SmartDashboard.putNumber("xSpeed", xSpeed);
     SmartDashboard.putNumber("ySpeed", ySpeed);
@@ -132,10 +127,10 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("back left turn output", m_backRight.showTurnPower());
 
     if (fieldRelative) {
-      swerveModuleStates = m_kinematics.toSwerveModuleStates(
+      swerveModuleStates = Constants.DriveTrain.KINEMATICS.toSwerveModuleStates(
           ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyroYaw2d()));
     } else {
-      swerveModuleStates = m_kinematics.toSwerveModuleStates(
+      swerveModuleStates = Constants.DriveTrain.KINEMATICS.toSwerveModuleStates(
           new ChassisSpeeds(xSpeed, ySpeed, rot));
     }
 
@@ -143,12 +138,50 @@ public class Drivetrain extends SubsystemBase {
 
     SmartDashboard.putString("desired state", swerveModuleStates[3].toString());
 
-    m_frontLeft.setDesiredState(swerveModuleStates[0]);
-    m_frontRight.setDesiredState(swerveModuleStates[1]);
-    m_backLeft.setDesiredState(swerveModuleStates[2]);
-    m_backRight.setDesiredState(swerveModuleStates[3]);
+    setModuleStates(swerveModuleStates);
+    // m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    // m_frontRight.setDesiredState(swerveModuleStates[1]);
+    // m_backLeft.setDesiredState(swerveModuleStates[2]);
+    // m_backRight.setDesiredState(swerveModuleStates[3]);
   
+    // updateOdometry();
+  }
+
+  public void stop() {
+    SwerveModuleState[] swerveModuleStates = {
+      new SwerveModuleState(0, m_frontLeft.getRotation()),
+      new SwerveModuleState(0, m_frontRight.getRotation()),
+      new SwerveModuleState(0, m_backLeft.getRotation()),
+      new SwerveModuleState(0, m_backRight.getRotation()),
+    };
+
+    setModuleStates(swerveModuleStates);
+  }
+
+  @Override
+  public void periodic() {
     updateOdometry();
+  }
+
+  public void resetOdometry(Pose2d pose) {
+    m_odometry.resetPosition(
+        getGyroYaw2d(),
+        new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_backLeft.getPosition(),
+          m_backRight.getPosition()
+        },
+        pose);
+  }
+
+  public void setModuleStates(SwerveModuleState[] desiredStates) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        desiredStates, Constants.DriveTrain.MAX_SPEED_METERS_PER_SECOND);
+    m_frontLeft.setDesiredState(desiredStates[0]);
+    m_frontRight.setDesiredState(desiredStates[1]);
+    m_backLeft.setDesiredState(desiredStates[2]);
+    m_backRight.setDesiredState(desiredStates[3]);
   }
 
   /** Updates the field relative position of the robot. */

@@ -45,15 +45,18 @@ public class SwerveDriveManualCommand extends Command {
   public void execute() {
     driveTrain.drive(
       forwardSupplier.getAsDouble(), 
-      strafeSupplier.getAsDouble(), 
-      rotateSupplier.getAsDouble(), 
+      strafeSupplier.getAsDouble(),
+      rotateSupplier.getAsDouble(),
       fieldRelative.getAsBoolean()
-      );
+    );
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    // driveTrain.drive(0, 0, 0, true);
+    driveTrain.stop();
+  }
 
   // Returns true when the command should end.
   @Override

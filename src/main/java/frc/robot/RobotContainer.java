@@ -4,16 +4,17 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Subsystems.*;
-import frc.robot.utils.ExtendedXboxController;
+import frc.robot.Constants.ControllerMapping;
+import frc.robot.Constants.MiscMapping;
 import frc.robot.Commands.ArmLiftPIDControlCommand;
 import frc.robot.Commands.HandoffControlCommand;
 import frc.robot.Commands.IntakeControlCommand;
@@ -23,11 +24,18 @@ import frc.robot.Commands.LaunchControlCommand;
 import frc.robot.Commands.ResetGyroYawInstantCommand;
 import frc.robot.Commands.SetDeliverySelectorInstantCommand;
 import frc.robot.Commands.SwerveDriveManualCommand;
+import frc.robot.Commands.Autonomous.AutonDriveCommand;
 import frc.robot.Commands.Autonomous.AutonHandoffCommand;
 import frc.robot.Commands.Autonomous.AutonIntakeCommand;
 import frc.robot.Commands.Autonomous.AutonLauncherCommand;
-import frc.robot.Constants.ControllerMapping;
-import frc.robot.Constants.MiscMapping;
+import frc.robot.Subsystems.ArmLift;
+import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Handoff;
+import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.IntakeExtend;
+import frc.robot.Subsystems.Launcher;
+import frc.robot.Subsystems.Sensors;
+import frc.robot.utils.ExtendedXboxController;
 
 public class RobotContainer {
   private final ExtendedXboxController m_Xbox = new ExtendedXboxController(ControllerMapping.XBOX);
@@ -68,6 +76,10 @@ public class RobotContainer {
       new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true),
       new WaitCommand(1.0),
       new AutonHandoffCommand(handoff, 0.0, sensors, true),
+      // AutonTrajectoryFactory.create(
+      //   driveTrain,
+      //   AutonTrajectoryFactory.Trajectories.exampleTrajectory
+      // ),
       new AutonLauncherCommand(launcher, 0.0));
 
   // #endregion
@@ -143,7 +155,11 @@ public class RobotContainer {
     intakeExtend.IntakeIn();
     // CommandScheduler.getInstance().schedule(ArmLiftPIDControlCommand(armLift,
     // MiscMapping.ARM_UP_POSITION));
-    new ParallelCommandGroup(new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors));
+    var command = new ParallelCommandGroup(
+      new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors)
+    );
+
+    CommandScheduler.getInstance().schedule(command);
   }
 
   public void autonomousInit() {
@@ -152,6 +168,18 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // [ MAIN AUTONS ]
-    return DefaultAuton; // Just a wait command to satisfy WPILIB.
+
+    var autonCommand = new SequentialCommandGroup(
+      new InstantCommand(
+        () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+        driveTrain
+      ),
+      new ParallelCommandGroup(
+        new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors),
+        new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(Math.PI / 2)))
+      )
+    );
+
+    return autonCommand;
   }
 }

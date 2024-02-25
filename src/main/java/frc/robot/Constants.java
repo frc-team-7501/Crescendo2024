@@ -1,5 +1,10 @@
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
 public final class Constants {
     public static final class CANMapping {
 
@@ -74,5 +79,38 @@ public final class Constants {
                                                  // = 0.12 volts / Rotation per second
         public static final double PEAK_VOLTAGE = 11; // Peak output of X volts on a Falcon.
         public static final double PEAK_AMPERAGE = 80; // Peak output of X amps on a Falcon.
+    }
+
+    public static final class PIDConfig {
+        public final double P;
+        public final double I;
+        public final double D;
+
+        public PIDConfig(double kP, double kI, double kD) {
+            this.P = kP;
+            this.I = kI;
+            this.D = kD;
+        }
+
+        public PIDController toPidController() {
+            return new PIDController(P, I, D);
+        }
+    }
+
+    public static final class DriveTrain {
+        public static final double MAX_SPEED_METERS_PER_SECOND      = 0.75; // m/s (not really)
+        public static final double MAX_ACCEL_METERS_PER_SECOND_SQ   = 1.0; // m/s^2 (not really)
+
+        public static final Translation2d LOCATION_FRONT_LEFT = new Translation2d(0.238, 0.238);
+        public static final Translation2d LOCATION_FRONT_RIGHT = new Translation2d(0.238, -0.238);
+        public static final Translation2d LOCATION_BACK_LEFT = new Translation2d(-0.238, 0.238);
+        public static final Translation2d LOCATION_BACK_RIGHT = new Translation2d(-0.238, -0.238);
+
+        public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
+            LOCATION_FRONT_LEFT, LOCATION_FRONT_RIGHT, LOCATION_BACK_LEFT, LOCATION_BACK_RIGHT);
+
+        public static final PIDConfig PID_X = new PIDConfig(0.005, 0.00025, 0.0025);
+        public static final PIDConfig PID_Y = new PIDConfig(0.005, 0.00025, 0.0025);
+        public static final PIDConfig PID_T = new PIDConfig(0.005, 0, 0);
     }
 }
