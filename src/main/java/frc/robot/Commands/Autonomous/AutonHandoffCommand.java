@@ -4,6 +4,7 @@
 
 package frc.robot.Commands.Autonomous;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Handoff;
 import frc.robot.Subsystems.Sensors;

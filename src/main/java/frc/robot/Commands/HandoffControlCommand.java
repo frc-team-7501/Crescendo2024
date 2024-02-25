@@ -13,6 +13,7 @@ public class HandoffControlCommand extends Command {
   /** Creates a new LaunchCommand. */
   private final Handoff Handoff;
   private double handoffSpeed;
+  private double myhandoffSpeed;
   private boolean override;
   private Sensors sensors;
 
@@ -33,10 +34,18 @@ public class HandoffControlCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // Slow down the handoff when speed sensor is triggered
+    if (sensors.getHandOffSpeedSensor()) {
+      myhandoffSpeed = handoffSpeed / 2;
+    } else { 
+      myhandoffSpeed = handoffSpeed;
+    }
+
+    // Decide if the intake stops for the AMP or Speaker
      if (sensors.getDeliverySelector()) {
-      Handoff.fireHandoff(handoffSpeed, override, sensors.getHandOffSensor());
+      Handoff.fireHandoff(myhandoffSpeed, override, sensors.getHandOffSensor());
     } else {
-      Handoff.fireHandoff(handoffSpeed, override, sensors.getIntakeSensor());
+      Handoff.fireHandoff(myhandoffSpeed, override, sensors.getIntakeSensor());
     }
   }
 
