@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public final class Constants {
     public static final class CANMapping {
@@ -81,26 +80,32 @@ public final class Constants {
         public static final double PEAK_AMPERAGE = 80; // Peak output of X amps on a Falcon.
     }
 
-    public static final class PIDConfig {
+    public static class PIDConfig {
         public final double P;
         public final double I;
         public final double D;
 
-        public PIDConfig(double kP, double kI, double kD) {
+        public final double tolerance;
+
+        public PIDConfig(double kP, double kI, double kD, double tolerance) {
             this.P = kP;
             this.I = kI;
             this.D = kD;
+            this.tolerance = tolerance;
         }
 
-        public PIDController toPidController() {
-            return new PIDController(P, I, D);
+        public PIDConfig(double kP, double kI, double kD) {
+            this(kP, kI, kD, 0.0);
+        }
+
+        public PIDController toPIDController() {
+            var controller = new PIDController(P, I, D);
+            controller.setTolerance(tolerance);
+            return controller;
         }
     }
 
     public static final class DriveTrain {
-        public static final double MAX_SPEED_METERS_PER_SECOND      = 0.75; // m/s (not really)
-        public static final double MAX_ACCEL_METERS_PER_SECOND_SQ   = 1.0; // m/s^2 (not really)
-
         public static final Translation2d LOCATION_FRONT_LEFT = new Translation2d(0.238, 0.238);
         public static final Translation2d LOCATION_FRONT_RIGHT = new Translation2d(0.238, -0.238);
         public static final Translation2d LOCATION_BACK_LEFT = new Translation2d(-0.238, 0.238);
@@ -109,8 +114,8 @@ public final class Constants {
         public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
             LOCATION_FRONT_LEFT, LOCATION_FRONT_RIGHT, LOCATION_BACK_LEFT, LOCATION_BACK_RIGHT);
 
-        public static final PIDConfig PID_X = new PIDConfig(0.005, 0.00025, 0.0025);
-        public static final PIDConfig PID_Y = new PIDConfig(0.005, 0.00025, 0.0025);
-        public static final PIDConfig PID_T = new PIDConfig(0.005, 0, 0);
+        public static final PIDConfig PID_X = new PIDConfig(1e-7, 0, 3.5e-8, 1);
+        public static final PIDConfig PID_Y = new PIDConfig(1e-7, 0, 3.5e-8, 1);
+        public static final PIDConfig PID_T = new PIDConfig(7e-8, 2e-9, 3e-8, Math.toRadians(4));
     }
 }

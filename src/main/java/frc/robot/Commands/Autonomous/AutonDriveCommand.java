@@ -20,24 +20,25 @@ public class AutonDriveCommand extends Command {
         this.drivetrain = drivetrain;
         this.targetPose2d = targetPose2d;
 
-        xController = Constants.DriveTrain.PID_X.toPidController();
-        yController = Constants.DriveTrain.PID_Y.toPidController();
-        angleController = Constants.DriveTrain.PID_T.toPidController();
+        xController = Constants.DriveTrain.PID_X.toPIDController();
+        yController = Constants.DriveTrain.PID_Y.toPIDController();
+        angleController = Constants.DriveTrain.PID_T.toPIDController();
 
-        xController.setTolerance(2);
-        yController.setTolerance(2);
-        angleController.setTolerance(Math.toRadians(4));
+        angleController.enableContinuousInput(-Math.PI, Math.PI); // TODO: what limits does pigeon give??
     }
 
     @Override
     public void initialize() {
-        xController.setSetpoint(targetPose2d.getX());
-        yController.setSetpoint(targetPose2d.getY());
+        final double xConversionInches = 39.2/77; // 39.2 units / 77 inches
+        final double yConversionInches = -39.47/78; // negate so left is negative, right is positive
+
+        xController.setSetpoint(targetPose2d.getX() * xConversionInches);
+        yController.setSetpoint(targetPose2d.getY() * yConversionInches);
         angleController.setSetpoint(targetPose2d.getRotation().getRadians());
     }
 
-    private double clamp(double val) {
-        return Math.signum(val) * Math.max(Math.abs(val), 0.4);
+    private double clampOutput(double val, double limit) {
+        return Math.signum(val) * Math.max(Math.abs(val), limit);
     }
 
     @Override
@@ -55,18 +56,21 @@ public class AutonDriveCommand extends Command {
         SmartDashboard.putNumber("outputY", outputY);
         SmartDashboard.putNumber("outputT", outputT);
 
-        SmartDashboard.putBoolean("x atSetpoint", xController.atSetpoint());
-        SmartDashboard.putBoolean("y atSetpoint", yController.atSetpoint());
-        SmartDashboard.putBoolean("angle atSetpoint", angleController.atSetpoint());
-
-
-
-        drivetrain.drive(-clamp(outputX), -clamp(outputY), -clamp(outputT), true);
+        drivetrain.driveRawFieldRelative(clampOutput(outputX, 0.4), clampOutput(outputY, 0.4), clampOutput(outputT, 0.75));
     }
 
     @Override
     public boolean isFinished() {
-        return xController.atSetpoint() && yController.atSetpoint() && angleController.atSetpoint();
+        
+        SmartDashboard.putBoolean("x atSetpoint", xController.atSetpoint());
+        SmartDashboard.putBoolean("y atSetpoint", yController.atSetpoint());
+        SmartDashboard.putBoolean("angle atSetpoint", angleController.atSetpoint());
+
+        boolean condition = xController.atSetpoint() && yController.atSetpoint() && angleController.atSetpoint();
+
+        SmartDashboard.putBoolean("condition", condition);
+
+        return condition;
     }
 
     @Override

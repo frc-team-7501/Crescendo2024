@@ -93,6 +93,17 @@ public class Drivetrain extends SubsystemBase {
     return m_odometry.getPoseMeters();
   }
 
+  public void driveRawFieldRelative(double forward, double strafe, double rotate) {
+    forward = m_yspeedLimiter.calculate(forward) * Drivetrain.kMaxSpeed;
+    strafe = m_xspeedLimiter.calculate(strafe) * Drivetrain.kMaxSpeed;
+    rotate = m_rotLimiter.calculate(rotate) * Drivetrain.kMaxAngularSpeed;
+
+    SwerveModuleState[] swerveModuleStates = Constants.DriveTrain.KINEMATICS.toSwerveModuleStates(
+      ChassisSpeeds.fromFieldRelativeSpeeds(forward, strafe, rotate, getGyroYaw2d()));
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
+    setModuleStates(swerveModuleStates);
+  }
+
   /**
    * Method to drive the robot using joystick info.
    *
@@ -143,16 +154,16 @@ public class Drivetrain extends SubsystemBase {
     // m_frontRight.setDesiredState(swerveModuleStates[1]);
     // m_backLeft.setDesiredState(swerveModuleStates[2]);
     // m_backRight.setDesiredState(swerveModuleStates[3]);
-  
+
     // updateOdometry();
   }
 
   public void stop() {
     SwerveModuleState[] swerveModuleStates = {
-      new SwerveModuleState(0, m_frontLeft.getRotation()),
-      new SwerveModuleState(0, m_frontRight.getRotation()),
-      new SwerveModuleState(0, m_backLeft.getRotation()),
-      new SwerveModuleState(0, m_backRight.getRotation()),
+        new SwerveModuleState(0, m_frontLeft.getRotation()),
+        new SwerveModuleState(0, m_frontRight.getRotation()),
+        new SwerveModuleState(0, m_backLeft.getRotation()),
+        new SwerveModuleState(0, m_backRight.getRotation()),
     };
 
     setModuleStates(swerveModuleStates);
@@ -167,17 +178,16 @@ public class Drivetrain extends SubsystemBase {
     m_odometry.resetPosition(
         getGyroYaw2d(),
         new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_backLeft.getPosition(),
-          m_backRight.getPosition()
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_backLeft.getPosition(),
+            m_backRight.getPosition()
         },
         pose);
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, Constants.DriveTrain.MAX_SPEED_METERS_PER_SECOND);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, 0.75);
     m_frontLeft.setDesiredState(desiredStates[0]);
     m_frontRight.setDesiredState(desiredStates[1]);
     m_backLeft.setDesiredState(desiredStates[2]);
