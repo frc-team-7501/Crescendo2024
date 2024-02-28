@@ -29,6 +29,7 @@ public final class Constants {
         public static final int LAUNCH_SPARKMAX_B = 13;
         public static final int LAUNCH_SPARKMAX_T = 14;
         public static final int INTAKE_SPARKMAX_LIFT = 15;
+        public static final int CLIMB_TALONSRX = 16;
 
         // MISC CAN Bus
         public static final int PIGEON_IMU = 20;
@@ -114,8 +115,8 @@ public final class Constants {
         public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
             LOCATION_FRONT_LEFT, LOCATION_FRONT_RIGHT, LOCATION_BACK_LEFT, LOCATION_BACK_RIGHT);
 
-        public static final PIDConfig PID_X = new PIDConfig(1e-7, 0, 3.5e-8, 1);
-        public static final PIDConfig PID_Y = new PIDConfig(1e-7, 0, 3.5e-8, 1);
-        public static final PIDConfig PID_T = new PIDConfig(7e-8, 2e-9, 3e-8, Math.toRadians(4));
+        public static final PIDConfig PID_X = new PIDConfig(2e-7, 0, 5e-8, 1);
+        public static final PIDConfig PID_Y = new PIDConfig(2e-7, 0, 5e-8, 1);
+        public static final PIDConfig PID_T = new PIDConfig(7e-9, 2e-9, 3e-8, Math.toRadians(4));
     }
 }
