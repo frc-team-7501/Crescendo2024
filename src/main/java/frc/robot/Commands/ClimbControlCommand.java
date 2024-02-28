@@ -15,6 +15,7 @@ public class ClimbControlCommand extends Command {
   public ClimbControlCommand(Climb Climb, Double ClimbPower) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.Climb = Climb;
+    this.ClimbPower = ClimbPower;
     addRequirements(Climb);
   }
 
