@@ -6,7 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ControllerMapping;
 import frc.robot.Constants.MiscMapping;
 import frc.robot.Commands.ArmLiftPIDControlCommand;
-import frc.robot.Commands.ClimbControlCommand;
+//import frc.robot.Commands.ClimbControlCommand;
 import frc.robot.Commands.HandoffControlCommand;
 import frc.robot.Commands.IntakeControlCommand;
 import frc.robot.Commands.IntakeExtendInstantCommand;
@@ -30,7 +30,7 @@ import frc.robot.Commands.Autonomous.AutonHandoffCommand;
 import frc.robot.Commands.Autonomous.AutonIntakeCommand;
 import frc.robot.Commands.Autonomous.AutonLauncherCommand;
 import frc.robot.Subsystems.ArmLift;
-import frc.robot.Subsystems.Climb;
+//import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Handoff;
 import frc.robot.Subsystems.Intake;
@@ -51,7 +51,7 @@ public class RobotContainer {
     private final IntakeExtend intakeExtend = IntakeExtend.getInstance();
     private final ArmLift armLift = ArmLift.getInstance();
     private final Sensors sensors = Sensors.getInstance();
-    private final Climb climb = Climb.getInstance();
+    //private final Climb climb = Climb.getInstance();
 
     // Variables to replace stick values on the Controller.
     // public double XPosition;
@@ -64,11 +64,8 @@ public class RobotContainer {
     // #region Placeholder
     // Auton placeholder
     private final Command DefaultAuton = new SequentialCommandGroup(
-            // Move arm to DOWN position
 
             // Spin up launcher (1.5 seconds)
-            // new ParallelCommandGroup(
-            // new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors),
             new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
             // ),
             new WaitCommand(1.5),
@@ -150,7 +147,7 @@ public class RobotContainer {
             () -> MiscMapping.FIELD_RELATIVE);
 
     // Joystick to control Climb.
-    private final Command climbControlCommand = new ClimbControlCommand (climb, () -> m_Xbox2.getLeftY());
+    //private final Command climbControlCommand = new ClimbControlCommand(climb, () -> m_Xbox2.getLeftY());
 
     // private final InstantCommand ResetGyroYawInstantCommand = new
     // ResetGyroYawInstantCommand(
@@ -159,7 +156,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureButtonBindings();
         driveTrain.setDefaultCommand(swerveDriveManualCommand);
-        climb.setDefaultCommand(climbControlCommand);
+    //    climb.setDefaultCommand(climbControlCommand);
     }
 
     private void configureButtonBindings() {
@@ -201,9 +198,15 @@ public class RobotContainer {
         m_Xbox2.b_LeftBumper().onFalse(new ParallelCommandGroup(new IntakeControlCommand(intake, 0.0, sensors),
                 new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors)));
 
-        // Chose either to deliver at the Amp or Speaker.
+        // Choose either to deliver at the Amp or Speaker.
         m_Xbox.b_A().onTrue(new SetDeliverySelectorInstantCommand(sensors, false)); // Speaker
         m_Xbox.b_B().onTrue(new SetDeliverySelectorInstantCommand(sensors, true)); // Amp
+
+        // "Phantom Button"
+        m_Xbox.b_RightBumper()
+                .onTrue(new ParallelCommandGroup(
+                        new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_PHANTOM_POSITION, sensors),
+                        new IntakeRetractInstantCommand(intakeExtend, sensors)));
     }
 
     public void teleopInit() {

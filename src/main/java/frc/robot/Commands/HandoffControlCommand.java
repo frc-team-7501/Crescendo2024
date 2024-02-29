@@ -6,7 +6,6 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Handoff;
-import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Sensors;
 
 public class HandoffControlCommand extends Command {

@@ -29,7 +29,7 @@ public final class Constants {
         public static final int LAUNCH_SPARKMAX_B = 13;
         public static final int LAUNCH_SPARKMAX_T = 14;
         public static final int INTAKE_SPARKMAX_LIFT = 15;
-        public static final int CLIMB_TALONSRX = 16;
+        // public static final int CLIMB_TALONSRX = 16;
 
         // MISC CAN Bus
         public static final int PIGEON_IMU = 20;
@@ -65,6 +65,7 @@ public final class Constants {
         public static final double HANDOFF_SPEED = 0.7;
         public static final double ARM_PID_TOLERANCE = 0.05;
         public static final double ARM_UP_POSITION = 0.6;
+        public static final double ARM_PHANTOM_POSITION = 0.65;
         public static final double ARM_DOWN_POSITION = 0.8;
         public static final double AMP_VELOCITY = 20;
     }
