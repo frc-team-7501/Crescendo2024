@@ -93,7 +93,7 @@ private final Command DefaultAuton = new SequentialCommandGroup(
                                         new AutonIntakeCommand(intake, MiscMapping.INTAKE_VELOCITY,
                                                         sensors),
                                         new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED,
-                                                        sensors, true)),
+                                                        sensors, false)),
                         // Stop intake and handoff once Note is in-place
                         new AutonIntakeCommand(intake, 0.0, sensors),
                         new AutonHandoffCommand(handoff, 0.0, sensors, false),
@@ -123,6 +123,7 @@ private final Command DefaultAuton = new SequentialCommandGroup(
                                                         sensors),
                                         new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED,
                                                         sensors, true)),
+
                         // Stop intake and handoff once Note is in-place
                         new AutonIntakeCommand(intake, 0.0, sensors),
                         new AutonHandoffCommand(handoff, 0.0, sensors, false),

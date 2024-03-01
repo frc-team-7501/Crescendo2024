@@ -29,7 +29,7 @@ public final class Constants {
         public static final int LAUNCH_SPARKMAX_B = 13;
         public static final int LAUNCH_SPARKMAX_T = 14;
         public static final int INTAKE_SPARKMAX_LIFT = 15;
-        // public static final int CLIMB_TALONSRX = 16;
+        public static final int CLIMB_SPARKMAX = 16;
 
         // MISC CAN Bus
         public static final int PIGEON_IMU = 20;
