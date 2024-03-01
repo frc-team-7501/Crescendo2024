@@ -36,6 +36,7 @@ import frc.robot.Subsystems.Handoff;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.IntakeExtend;
 import frc.robot.Subsystems.Launcher;
+import frc.robot.Subsystems.Limelight;
 import frc.robot.Subsystems.Sensors;
 import frc.robot.utils.ExtendedXboxController;
 
@@ -51,6 +52,7 @@ public class RobotContainer {
         private final IntakeExtend intakeExtend = IntakeExtend.getInstance();
         private final ArmLift armLift = ArmLift.getInstance();
         private final Sensors sensors = Sensors.getInstance();
+        private final Limelight limelight = Limelight.getInstance();
         // private final Climb climb = Climb.getInstance();
 
         // Variables to replace stick values on the Controller.
