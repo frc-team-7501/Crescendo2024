@@ -97,7 +97,6 @@ public class Drivetrain extends SubsystemBase {
     forward = m_yspeedLimiter.calculate(forward) * Drivetrain.kMaxSpeed;
     strafe = m_xspeedLimiter.calculate(strafe) * Drivetrain.kMaxSpeed;
     rotate = m_rotLimiter.calculate(rotate) * Drivetrain.kMaxAngularSpeed;
-
     SwerveModuleState[] swerveModuleStates = Constants.DriveTrain.KINEMATICS.toSwerveModuleStates(
       ChassisSpeeds.fromFieldRelativeSpeeds(forward, strafe, rotate, getGyroYaw2d()));
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
@@ -113,17 +112,17 @@ public class Drivetrain extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
-  public void drive(double forward, double strafe, double rotate, boolean fieldRelative) {
+  public void drive(double forward, double strafe, double rotate, boolean fieldRelative, double speedMultiplier) {
     SwerveModuleState[] swerveModuleStates;
 
     // Get the y speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
-    final var xSpeed = -m_yspeedLimiter.calculate(MathUtil.applyDeadband(forward, 0.02)) * Drivetrain.kMaxSpeed;
+    final var xSpeed = -m_yspeedLimiter.calculate(MathUtil.applyDeadband(forward, 0.02)) * speedMultiplier;
 
     // Get the x speed or sideways/strafe speed. We are inverting this because
     // we want a positive value when we pull to the left. Xbox controllers
     // return positive values when you pull to the right by default.
-    final var ySpeed = -m_xspeedLimiter.calculate(MathUtil.applyDeadband(strafe, 0.02)) * Drivetrain.kMaxSpeed;
+    final var ySpeed = -m_xspeedLimiter.calculate(MathUtil.applyDeadband(strafe, 0.02)) * speedMultiplier;
 
     // Get the rate of angular rotation. We are inverting this because we want a
     // positive value when we pull to the left (remember, CCW is positive in
@@ -136,6 +135,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("rotation", rot);
     SmartDashboard.putNumber("back left position", m_backRight.showRotation() % (Math.PI * 2));
     SmartDashboard.putNumber("back left turn output", m_backRight.showTurnPower());
+    SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
 
     if (fieldRelative) {
       swerveModuleStates = Constants.DriveTrain.KINEMATICS.toSwerveModuleStates(

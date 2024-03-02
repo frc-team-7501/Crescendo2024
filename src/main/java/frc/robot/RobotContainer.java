@@ -24,6 +24,7 @@ import frc.robot.Commands.IntakeRetractInstantCommand;
 import frc.robot.Commands.LaunchControlCommand;
 import frc.robot.Commands.ResetGyroYawInstantCommand;
 import frc.robot.Commands.SetDeliverySelectorInstantCommand;
+import frc.robot.Commands.SetSpeedMultiplierInstantCommand;
 import frc.robot.Commands.SwerveDriveManualCommand;
 import frc.robot.Commands.Autonomous.AutonDriveCommand;
 import frc.robot.Commands.Autonomous.AutonHandoffCommand;
@@ -65,90 +66,84 @@ public class RobotContainer {
         // #region [ AUTON COMMANDS ]
         // #region Placeholder
         // Auton placeholder
-private final Command DefaultAuton = new SequentialCommandGroup(
-                new ParallelCommandGroup(
-                                new InstantCommand(
-                                                () -> driveTrain.resetOdometry(                                                                        new Pose2d(0, 0, new Rotation2d(0))),
-                                                 driveTrain),
-                                new ResetGyroYawInstantCommand(driveTrain)),
-                new WaitCommand(1.0),
+        private final Command DefaultAuton = new SequentialCommandGroup(
+                // Move arm to DOWN position
+          
                 // Spin up launcher (1.5 seconds)
+                // new ParallelCommandGroup(
+                // new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors),
+                new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+                // ),
+                new WaitCommand(1.5),
+          
+                // Fire for 1.0 second
+                new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true),
+                new WaitCommand(1.0),
+                // Stop launcher/handoff after fire
+                new AutonHandoffCommand(handoff, 0.0, sensors, true),
+                new AutonLauncherCommand(launcher, 0.0),
+          
+                // Move intake down to pick up
+                // new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_DOWN_POSITION,
+                // sensors),
+          
+                // new WaitCommand(2.0),
+          
+                // Spin intake and handoff until a Note is in the launcher and drive to pickup
+                // point
+                new ParallelCommandGroup(
+                    new AutonDriveCommand(driveTrain, new Pose2d(60, 0, new Rotation2d(0))),
+                    new AutonIntakeCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors),
+                    new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true)),
+                // Stop intake and handoff once Note is in-place
+                new AutonIntakeCommand(intake, 0.0, sensors),
+                new AutonHandoffCommand(handoff, 0.0, sensors, false),
+          
+                // Spin up launcher (wait 1.5 seconds for ramp-up) and drive to shooting
+                // position
+                new ParallelCommandGroup(
+                    new SequentialCommandGroup(
                         new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
-                        new WaitCommand(1.5),
-
-                        // Fire for 1.0 second
-                        new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true),
-                        new WaitCommand(1.0),
-                        // Stop launcher/handoff after fire
-                        new AutonHandoffCommand(handoff, 0.0, sensors, true),
-                        new AutonLauncherCommand(launcher, 0.0),
-
-                        // Move intake down to pick up
-                        // new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_DOWN_POSITION,
-                        // sensors),
-
-                        // Spin intake and handoff until a Note is in the launcher and drive to pickup
-                        // point
-                        new ParallelCommandGroup(
-                                        new AutonDriveCommand(driveTrain,
-                                                        new Pose2d(60, 0, new Rotation2d(0))),
-                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_VELOCITY,
-                                                        sensors),
-                                        new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED,
-                                                        sensors, false)),
-                        // Stop intake and handoff once Note is in-place
-                        new AutonIntakeCommand(intake, 0.0, sensors),
-                        new AutonHandoffCommand(handoff, 0.0, sensors, false),
-
-                        // Spin up launcher (wait 1.5 seconds for ramp-up) and drive to shooting
-                        // position
-                        new ParallelCommandGroup(
-                                        new SequentialCommandGroup(
-                                                        new AutonLauncherCommand(launcher,
-                                                                        MiscMapping.LAUNCH_VELOCITY),
-                                                        new WaitCommand(1.5)),
-                                        new AutonDriveCommand(driveTrain,
-                                                        new Pose2d(0, 0, new Rotation2d(0)))),
-                        // Fire (1.0 second)
-                        new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true),
-                        new WaitCommand(1.0),
-                        // Stop handoff and launcher after fire
-                        new AutonHandoffCommand(handoff, 0.0, sensors, true),
-                        new AutonLauncherCommand(launcher, 0.0),
-
-                        // Spin intake and handoff until a Note is in the launcher and drive to pickup
-                        // point
-                        new ParallelCommandGroup(
-                                        new AutonDriveCommand(driveTrain, new Pose2d(60, 60,
-                                                        new Rotation2d((Math.PI / 180) * -50))),
-                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_VELOCITY,
-                                                        sensors),
-                                        new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED,
-                                                        sensors, true)),
-
-                        // Stop intake and handoff once Note is in-place
-                        new AutonIntakeCommand(intake, 0.0, sensors),
-                        new AutonHandoffCommand(handoff, 0.0, sensors, false),
-
-                        // Spin up launcher (wait 1.5 seconds for ramp-up) and drive to shooting
-                        // position
-                        new ParallelCommandGroup(
-                                        new SequentialCommandGroup(
-                                                        new AutonLauncherCommand(launcher,
-                                                                        MiscMapping.LAUNCH_VELOCITY),
-                                                        new WaitCommand(1.5)),
-                                        new AutonDriveCommand(driveTrain,
-                                                        new Pose2d(0, 0, new Rotation2d(0)))),
-                        // Fire (1.0 second)
-                        new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true),
-                        new WaitCommand(1.0),
-                        // Stop handoff and launcher after fire
-                        new AutonHandoffCommand(handoff, 0.0, sensors, true),
-                        new AutonLauncherCommand(launcher, 0.0),
-
-                        new AutonDriveCommand(driveTrain, new Pose2d(60, 0, new Rotation2d(0))));
-
+                        new WaitCommand(1.5)),
+                    new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(0)))),
+                // Fire (1.0 second)
+                new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true),
+                new WaitCommand(1.0),
+                // Stop handoff and launcher after fire
+                new AutonHandoffCommand(handoff, 0.0, sensors, true),
+                new AutonLauncherCommand(launcher, 0.0),
+          
+                // Spin intake and handoff until a Note is in the launcher and drive to pickup
+                // point
+                new ParallelCommandGroup(
+                    new AutonDriveCommand(driveTrain, new Pose2d(60, 60, new Rotation2d((Math.PI/180) * -50))),
+                    new AutonIntakeCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors),
+                    new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true)),
+                // Stop intake and handoff once Note is in-place
+                new AutonIntakeCommand(intake, 0.0, sensors),
+                new AutonHandoffCommand(handoff, 0.0, sensors, false),
+          
+                // Spin up launcher (wait 1.5 seconds for ramp-up) and drive to shooting
+                // position
+                new ParallelCommandGroup(
+                    new SequentialCommandGroup(
+                        new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+                        new WaitCommand(1.5)),
+                    new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(0)))),
+                // Fire (1.0 second)
+                new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true),
+                new WaitCommand(1.0),
+                // Stop handoff and launcher after fire
+                new AutonHandoffCommand(handoff, 0.0, sensors, true),
+                new AutonLauncherCommand(launcher, 0.0),
+          
+                new AutonDriveCommand(driveTrain, new Pose2d(60, 0, new Rotation2d(0))));
         // #endregion
+        //#region
+        private final Command ForwardMovement = new ParallelCommandGroup(
+                new AutonDriveCommand(driveTrain, new Pose2d(60, 0, new Rotation2d(0)))); 
+
+        //#endregion
 
         // Create commands
         // private final Command armLiftPIDControlCommand = new
@@ -158,6 +153,7 @@ private final Command DefaultAuton = new SequentialCommandGroup(
 
         private final Command swerveDriveManualCommand = new SwerveDriveManualCommand(
                         driveTrain,
+                        sensors,
                         () -> m_Xbox.getLeftY(),
                         () -> m_Xbox.getLeftX(),
                         () -> m_Xbox.getRightX(),
@@ -227,13 +223,17 @@ private final Command DefaultAuton = new SequentialCommandGroup(
                 m_Xbox.b_B().onTrue(new SetDeliverySelectorInstantCommand(sensors, true)); // Amp
 
                 // "Phantom Button"
-                m_Xbox.b_RightBumper()
+                m_Xbox2.b_X()
                                 .onTrue(new ParallelCommandGroup(
                                                 new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_PHANTOM_POSITION,
                                                                 sensors),
                                                 new IntakeRetractInstantCommand(intakeExtend, sensors)));
-                m_Xbox.b_RightBumper()
+                m_Xbox2.b_X()
                                 .onFalse(new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors));
+
+                // Turbo Button
+                m_Xbox.b_RightBumper().onTrue(new SetSpeedMultiplierInstantCommand(sensors, MiscMapping.TURBO_MULTIPLIER));
+                m_Xbox.b_RightBumper().onFalse(new SetSpeedMultiplierInstantCommand(sensors, MiscMapping.NORMAL_MULTIPLIER));
         }
 
         public void teleopInit() {
@@ -249,6 +249,7 @@ private final Command DefaultAuton = new SequentialCommandGroup(
 
         public void autonomousInit() {
                 driveTrain.setBrakeMode(MiscMapping.BRAKE_ON);
+                driveTrain.resetYaw();
         }
 
         public Command getAutonomousCommand() {
@@ -274,6 +275,9 @@ private final Command DefaultAuton = new SequentialCommandGroup(
 
                 // var autonCommand =
                 // DefaultAuton
-                return DefaultAuton;
+                
+                
+                // return DefaultAuton;
+                return ForwardMovement;
         }
 }

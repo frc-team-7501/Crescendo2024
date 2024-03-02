@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DIOMapping;
+import frc.robot.Constants.MiscMapping;
 
 public class Sensors extends SubsystemBase {
   /** Creates a new Sensors. */
@@ -17,12 +18,13 @@ public class Sensors extends SubsystemBase {
   private DigitalInput intakeSensor = new DigitalInput(DIOMapping.INTAKE_SENSOR);
   private DutyCycleEncoder armEncoder = new DutyCycleEncoder(DIOMapping.ARM_LIFT_ENCODER);
   private boolean deliverySelector;
+  private double speedMultiplier;
   private static Sensors instance;
-
 
   public Sensors() {
   //Set the default delivery method to Launcher.
     deliverySelector = true;
+    speedMultiplier = MiscMapping.NORMAL_MULTIPLIER;
   }
 
   public static Sensors getInstance() {
@@ -59,6 +61,14 @@ public class Sensors extends SubsystemBase {
 
   public void setDeliverySelector(boolean selector) {
   deliverySelector = selector;
+  }
+  
+  public double getSpeedMultiplier() {
+    return speedMultiplier;
+  }
+
+  public void setSpeedMultiplier(double multiplier) {
+  speedMultiplier = multiplier;
   }
 
   public double getArmEncoderAbsolute() {

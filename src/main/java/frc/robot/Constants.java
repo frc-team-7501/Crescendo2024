@@ -64,10 +64,13 @@ public final class Constants {
         public static final double INTAKE_VELOCITY = -25;
         public static final double HANDOFF_SPEED = 0.7;
         public static final double ARM_PID_TOLERANCE = 0.05;
-        public static final double ARM_UP_POSITION = 0.6;
+        public static final double ARM_UP_POSITION = 0.62;
         public static final double ARM_PHANTOM_POSITION = 0.65;
         public static final double ARM_DOWN_POSITION = 0.8;
         public static final double AMP_VELOCITY = 20;
+        public static final double NORMAL_MULTIPLIER = 0.3;
+        public static final double TURBO_MULTIPLIER = 0.8;
+
     }
 
     public static final class TalonMapping {
@@ -116,8 +119,8 @@ public final class Constants {
         public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
             LOCATION_FRONT_LEFT, LOCATION_FRONT_RIGHT, LOCATION_BACK_LEFT, LOCATION_BACK_RIGHT);
 
-        public static final PIDConfig PID_X = new PIDConfig(2e-7, 0, 5e-8, 1);
-        public static final PIDConfig PID_Y = new PIDConfig(2e-7, 0, 5e-8, 1);
+        public static final PIDConfig PID_X = new PIDConfig(8e-3, 0, 0, 1);
+        public static final PIDConfig PID_Y = new PIDConfig(8e-3, 0, 0, 1);
         public static final PIDConfig PID_T = new PIDConfig(7e-9, 2e-9, 3e-8, Math.toRadians(4));
     }
 }

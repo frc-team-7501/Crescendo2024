@@ -12,7 +12,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 //import com.ctre.phoenix6.controls.VelocityVoltage;
 //import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANMapping;
 //import frc.robot.Constants.TalonMapping;
@@ -35,11 +34,9 @@ public class Launcher extends SubsystemBase {
 
   public void fireLauncher(double velocity) {
     m_LaunchMotorT.set(velocity);
-    SmartDashboard.putNumber("Top Velocity", velocity);
+    // SmartDashboard.putNumber("Top Velocity", velocity);
     m_LaunchMotorB.set(velocity);
-    SmartDashboard.putNumber("Bottom Velocity", velocity);
-    //  m_LaunchMotor.setControl(m_voltageVelocity.withVelocity(velocity));
-    //  SmartDashboard.putNumber("velocity", velocity);
+    // SmartDashboard.putNumber("Bottom Velocity", velocity);
   }
 
   @Override

@@ -9,10 +9,12 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Sensors;
 
 public class SwerveDriveManualCommand extends Command {
   /** Creates a new SwerveDriveManualCommand. */
   private final Drivetrain driveTrain;
+  private final Sensors sensors;
   private final DoubleSupplier forwardSupplier;
   private final DoubleSupplier strafeSupplier;
   private final DoubleSupplier rotateSupplier;
@@ -20,13 +22,16 @@ public class SwerveDriveManualCommand extends Command {
 
   public SwerveDriveManualCommand( 
     final Drivetrain driveTrain, 
+    final Sensors sensors,
     DoubleSupplier forwardSupplier, 
     DoubleSupplier strafeSupplier,
     DoubleSupplier rotateSupplier,
-    BooleanSupplier fieldRelative) {
+    BooleanSupplier fieldRelative
+    ) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
     this.driveTrain = driveTrain;
+    this.sensors = sensors;
     this.forwardSupplier = forwardSupplier;
     this.strafeSupplier = strafeSupplier;
     this.rotateSupplier = rotateSupplier;
@@ -47,7 +52,8 @@ public class SwerveDriveManualCommand extends Command {
       forwardSupplier.getAsDouble(), 
       strafeSupplier.getAsDouble(),
       rotateSupplier.getAsDouble(),
-      fieldRelative.getAsBoolean()
+      fieldRelative.getAsBoolean(),
+      sensors.getSpeedMultiplier()
     );
   }
 

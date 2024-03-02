@@ -68,7 +68,7 @@ public class Intake extends SubsystemBase {
       m_IntakeMotor.setControl(m_voltageVelocity.withVelocity(velocity));
     }
 
-    SmartDashboard.putNumber("velocity", velocity);
+    // SmartDashboard.putNumber("velocity", velocity);
   }
 
   @Override

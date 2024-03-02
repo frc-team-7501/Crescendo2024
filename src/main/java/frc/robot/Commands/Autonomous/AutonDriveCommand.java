@@ -38,25 +38,25 @@ public class AutonDriveCommand extends Command {
     }
 
     private double clampOutput(double val, double limit) {
-        return Math.signum(val) * Math.max(Math.abs(val), limit);
+        return Math.signum(val) * Math.min(Math.abs(val), limit);
     }
 
     @Override
     public void execute() {
         Pose2d currentPose = drivetrain.getPose();
 
-        double outputX = xController.calculate(currentPose.getX());
+        double outputX = xController.calculate(currentPose.getX()); 
         // double outputX = 0;
-        double outputY = yController.calculate(currentPose.getY());
-        // double outputY = 0;
-        double outputT = angleController.calculate(currentPose.getRotation().getRadians());
-        // double outputT = 0;
+        //double outputY = yController.calculate(currentPose.getY());
+         double outputY = 0;
+        // double outputT = angleController.calculate(currentPose.getRotation().getRadians());
+        double outputT = 0;
 
         SmartDashboard.putNumber("outputX", outputX);
         SmartDashboard.putNumber("outputY", outputY);
         SmartDashboard.putNumber("outputT", outputT);
 
-        drivetrain.driveRawFieldRelative(clampOutput(outputX, 0.4), clampOutput(outputY, 0.4), clampOutput(outputT, 0.75));
+        drivetrain.driveRawFieldRelative(-clampOutput(outputX, 0.2), clampOutput(outputY, 0.2), clampOutput(outputT, 0.75));
     }
 
     @Override
