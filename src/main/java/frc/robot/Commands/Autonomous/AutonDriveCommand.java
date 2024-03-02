@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Constants.MiscMapping;
 import frc.robot.Subsystems.Drivetrain;
 
 public class AutonDriveCommand extends Command {
@@ -29,11 +30,8 @@ public class AutonDriveCommand extends Command {
 
     @Override
     public void initialize() {
-        final double xConversionInches = 39.2/77; // 39.2 units / 77 inches
-        final double yConversionInches = -39.47/78; // negate so left is negative, right is positive
-
-        xController.setSetpoint(targetPose2d.getX() * xConversionInches);
-        yController.setSetpoint(targetPose2d.getY() * yConversionInches);
+        xController.setSetpoint(targetPose2d.getX() * MiscMapping.xConversionInches);
+        yController.setSetpoint(targetPose2d.getY() * MiscMapping.yConversionInches);
         angleController.setSetpoint(targetPose2d.getRotation().getRadians());
     }
 
@@ -47,16 +45,25 @@ public class AutonDriveCommand extends Command {
 
         double outputX = xController.calculate(currentPose.getX()); 
         // double outputX = 0;
-        //double outputY = yController.calculate(currentPose.getY());
-         double outputY = 0;
-        // double outputT = angleController.calculate(currentPose.getRotation().getRadians());
-        double outputT = 0;
+        double outputY = yController.calculate(currentPose.getY());
+        //  double outputY = 0;
+        double outputT = angleController.calculate(currentPose.getRotation().getRadians());
+        // double outputT = 0;
 
         SmartDashboard.putNumber("outputX", outputX);
         SmartDashboard.putNumber("outputY", outputY);
         SmartDashboard.putNumber("outputT", outputT);
 
-        drivetrain.driveRawFieldRelative(-clampOutput(outputX, 0.2), clampOutput(outputY, 0.2), clampOutput(outputT, 0.75));
+        // drivetrain.driveRawFieldRelative
+        outputX = clampOutput(outputX, 0.2); 
+        outputY = clampOutput(outputY, 0.2); 
+        outputT = clampOutput(outputT, 0.75);
+
+        SmartDashboard.putNumber("Clamped outputX", outputX);
+        SmartDashboard.putNumber("Clamped outputY", outputY);
+        SmartDashboard.putNumber("Clamped outputT", outputT);
+
+        drivetrain.drive(-outputX, -outputY, -outputT, true, 1);
     }
 
     @Override

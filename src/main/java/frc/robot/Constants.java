@@ -70,7 +70,8 @@ public final class Constants {
         public static final double AMP_VELOCITY = 20;
         public static final double NORMAL_MULTIPLIER = 0.3;
         public static final double TURBO_MULTIPLIER = 0.8;
-
+        public static final double xConversionInches = 39.2/77; // 39.2 units / 77 inches
+        public static final double yConversionInches = -39.47/78; // negate so left is negative, right is positive
     }
 
     public static final class TalonMapping {
@@ -119,8 +120,8 @@ public final class Constants {
         public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
             LOCATION_FRONT_LEFT, LOCATION_FRONT_RIGHT, LOCATION_BACK_LEFT, LOCATION_BACK_RIGHT);
 
-        public static final PIDConfig PID_X = new PIDConfig(8e-3, 0, 0, 1);
-        public static final PIDConfig PID_Y = new PIDConfig(8e-3, 0, 0, 1);
-        public static final PIDConfig PID_T = new PIDConfig(7e-9, 2e-9, 3e-8, Math.toRadians(4));
+        public static final PIDConfig PID_X = new PIDConfig(0.04, 0, 0, 3);
+        public static final PIDConfig PID_Y = new PIDConfig(0.04, 0, 0, 3);
+        public static final PIDConfig PID_T = new PIDConfig(0.3, 0, 0, Math.toRadians(4));
     }
 }
