@@ -157,10 +157,32 @@ public class RobotContainer {
     }
 
     private final Command BaseAuton = new SequentialCommandGroup(
-            new ParallelCommandGroup(new LaunchAuton(launcher, sensors, handoff),
-                    new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors)),
-            new AutonDriveCommand(driveTrain, new Pose2d(70, 0, new Rotation2d(0)))
+        new InstantCommand(
+                () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+                driveTrain
+        ),
+        new ParallelCommandGroup(
+            new LaunchAuton(launcher, sensors, handoff),
+            new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_DOWN_POSITION, sensors, true)
+        ),
 
+        new WaitCommand(1.0), // Wait for launcher to spin down
+
+        // Spin intake and handoff until a Note is in the launcher AND drive
+        new ParallelCommandGroup(
+            new AutonDriveCommand(driveTrain, new Pose2d(70, 0, new Rotation2d(0))),
+
+            new SequentialCommandGroup(
+                new ParallelCommandGroup(
+                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors),
+                        new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED / 2, sensors, true)
+                ),
+
+                // Stop intake and handoff once Note is in-place
+                new AutonIntakeCommand(intake, 0.0, sensors),
+                new AutonHandoffCommand(handoff, 0.0, sensors, false)
+            )
+        )
     );
 
     // #endregion
@@ -203,13 +225,13 @@ public class RobotContainer {
                         new WaitCommand(0.7),
                         new IntakeControlCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors)),
                 new HandoffControlCommand(handoff, sensors, MiscMapping.HANDOFF_SPEED, false),
-                new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_DOWN_POSITION, sensors),
+                new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_DOWN_POSITION, sensors, false),
                 new IntakeRetractInstantCommand(intakeExtend, sensors)));
 
         m_Xbox2.b_A().onFalse(new ParallelCommandGroup(
                 new IntakeControlCommand(intake, 0.0, sensors),
                 new HandoffControlCommand(handoff, sensors, 0.0, false),
-                new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors)));
+                new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors, false)));
 
         // Button commands to launch the note.
         m_Xbox2.b_B().onTrue(new LaunchControlCommand(launcher, MiscMapping.LAUNCH_VELOCITY));
@@ -220,12 +242,12 @@ public class RobotContainer {
                         new HandoffControlCommand(handoff, sensors, MiscMapping.HANDOFF_SPEED,
                                 true),
                         new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION,
-                                sensors)));
+                                sensors, false)));
         m_Xbox2.b_RightBumper()
                 .onFalse(new ParallelCommandGroup(
                         new HandoffControlCommand(handoff, sensors, 0.0, false),
                         new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION,
-                                sensors)));
+                                sensors, false)));
 
         // Button commands to control for AMP.
         m_Xbox2.b_Y().onTrue(new IntakeExtendInstantCommand(intakeExtend, sensors));
@@ -234,9 +256,9 @@ public class RobotContainer {
                 .onTrue(new ParallelCommandGroup(
                         new IntakeControlCommand(intake, MiscMapping.AMP_VELOCITY, sensors),
                         new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION,
-                                sensors)));
+                                sensors, false)));
         m_Xbox2.b_LeftBumper().onFalse(new ParallelCommandGroup(new IntakeControlCommand(intake, 0.0, sensors),
-                new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors)));
+                new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors, false)));
 
         // Choose either to deliver at the Amp or Speaker.
         m_Xbox.b_A().onTrue(new SetDeliverySelectorInstantCommand(sensors, false)); // Speaker
@@ -246,10 +268,10 @@ public class RobotContainer {
         m_Xbox2.b_X()
                 .onTrue(new ParallelCommandGroup(
                         new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_PHANTOM_POSITION,
-                                sensors),
+                                sensors, false),
                         new IntakeRetractInstantCommand(intakeExtend, sensors)));
         m_Xbox2.b_X()
-                .onFalse(new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors));
+                .onFalse(new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors, false));
 
         // Turbo Button
         m_Xbox.b_RightBumper()
@@ -264,7 +286,7 @@ public class RobotContainer {
         // CommandScheduler.getInstance().schedule(ArmLiftPIDControlCommand(armLift,
         // MiscMapping.ARM_UP_POSITION));
         var command = new ParallelCommandGroup(
-                new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors));
+                new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors, false));
 
         CommandScheduler.getInstance().schedule(command);
     }

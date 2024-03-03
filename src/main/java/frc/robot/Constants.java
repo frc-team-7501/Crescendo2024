@@ -69,7 +69,7 @@ public final class Constants {
         public static final double ARM_DOWN_POSITION = 0.8;
         public static final double AMP_VELOCITY = 20;
         public static final double NORMAL_MULTIPLIER = 0.3;
-        public static final double TURBO_MULTIPLIER = 0.8;
+        public static final double TURBO_MULTIPLIER = 1;
         public static final double xConversionInches = 39.2/77; // 39.2 units / 77 inches
         public static final double yConversionInches = -39.47/78; // negate so left is negative, right is positive
     }

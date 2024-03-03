@@ -15,9 +15,10 @@ import frc.robot.Subsystems.Sensors;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmLiftPIDControlCommand extends PIDCommand {
   private final ArmLift armLift;
+  private final boolean useTolerance;
 
   /** Creates a new ArmLiftPIDControlCommand. */
-  public ArmLiftPIDControlCommand(final ArmLift armLift, final double position, final Sensors sensors) {
+  public ArmLiftPIDControlCommand(final ArmLift armLift, final double position, final Sensors sensors, final boolean useTolerance) {
     super(
         // The controller that the command will use
         new PIDController(2.5, 0.5, 0),
@@ -34,6 +35,7 @@ public class ArmLiftPIDControlCommand extends PIDCommand {
     // Configure additional PID options by calling `getController` here.
     addRequirements(armLift);
     this.armLift = armLift;
+    this.useTolerance = useTolerance;
 
     getController().setTolerance(MiscMapping.ARM_PID_TOLERANCE);
   }
@@ -41,6 +43,10 @@ public class ArmLiftPIDControlCommand extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (useTolerance) {
+      return getController().atSetpoint();
+    } else {
+      return false;
+    }
   }
 }

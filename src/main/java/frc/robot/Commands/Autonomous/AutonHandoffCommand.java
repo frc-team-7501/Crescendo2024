@@ -33,6 +33,7 @@ public class AutonHandoffCommand extends Command {
   public void execute() {
     if (sensors.getHandOffSpeedSensor()) {
       handoffSpeed = handoffSpeed / 2;
+      // handoffSpeed = 0;
     }
     handoff.fireHandoff(handoffSpeed, override, sensors.getHandOffSensor());
   }
@@ -40,7 +41,9 @@ public class AutonHandoffCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //handoff.stop();
+    // handoff.fireHandoff(0.0, interrupted, true);
+    // handoff.stop();
+    SmartDashboard.putBoolean("handoff if", true);
   }
 
   // Returns true when the command should end.
