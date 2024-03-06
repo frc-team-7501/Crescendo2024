@@ -15,12 +15,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ControllerMapping;
 import frc.robot.Constants.MiscMapping;
-import frc.robot.Commands.ArmLiftPIDControlCommand;
-//import frc.robot.Commands.ClimbControlCommand;
 import frc.robot.Commands.HandoffControlCommand;
 import frc.robot.Commands.IntakeControlCommand;
-import frc.robot.Commands.IntakeExtendInstantCommand;
-import frc.robot.Commands.IntakeRetractInstantCommand;
 import frc.robot.Commands.LaunchControlCommand;
 import frc.robot.Commands.ResetGyroYawInstantCommand;
 import frc.robot.Commands.SetDeliverySelectorInstantCommand;
@@ -30,14 +26,10 @@ import frc.robot.Commands.Autonomous.AutonDriveCommand;
 import frc.robot.Commands.Autonomous.AutonHandoffCommand;
 import frc.robot.Commands.Autonomous.AutonIntakeCommand;
 import frc.robot.Commands.Autonomous.AutonLauncherCommand;
-import frc.robot.Subsystems.ArmLift;
-//import frc.robot.Subsystems.Climb;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Handoff;
 import frc.robot.Subsystems.Intake;
-import frc.robot.Subsystems.IntakeExtend;
 import frc.robot.Subsystems.Launcher;
-import frc.robot.Subsystems.Limelight;
 import frc.robot.Subsystems.Sensors;
 import frc.robot.utils.ExtendedXboxController;
 
@@ -50,10 +42,7 @@ public class RobotContainer {
     private final Launcher launcher = Launcher.getInstance();
     private final Intake intake = Intake.getInstance();
     private final Handoff handoff = Handoff.getInstance();
-    private final IntakeExtend intakeExtend = IntakeExtend.getInstance();
-    private final ArmLift armLift = ArmLift.getInstance();
     private final Sensors sensors = Sensors.getInstance();
-    private final Limelight limelight = Limelight.getInstance();
     // private final Climb climb = Climb.getInstance();
 
     // Variables to replace stick values on the Controller.
@@ -162,9 +151,7 @@ public class RobotContainer {
                 driveTrain
         ),
         new ParallelCommandGroup(
-            new LaunchAuton(launcher, sensors, handoff),
-            new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_DOWN_POSITION, sensors, true)
-        ),
+            new LaunchAuton(launcher, sensors, handoff)),
 
         new WaitCommand(1.0), // Wait for launcher to spin down
 
@@ -216,62 +203,44 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+        
         // Back button on the drive controller resets gyroscope.
         m_Xbox.b_Back().onTrue(new ResetGyroYawInstantCommand(driveTrain));
 
         // Button commands to intake the note.
-        m_Xbox2.b_A().onTrue(new ParallelCommandGroup(
-                new SequentialCommandGroup(
-                        new WaitCommand(0.7),
-                        new IntakeControlCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors)),
-                new HandoffControlCommand(handoff, sensors, MiscMapping.HANDOFF_SPEED, false),
-                new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_DOWN_POSITION, sensors, false),
-                new IntakeRetractInstantCommand(intakeExtend, sensors)));
+        m_Xbox2.b_A()
+                .onTrue(new ParallelCommandGroup(
+                        new IntakeControlCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors),
+                        new HandoffControlCommand(handoff, sensors, MiscMapping.HANDOFF_SPEED, false)));
 
-        m_Xbox2.b_A().onFalse(new ParallelCommandGroup(
-                new IntakeControlCommand(intake, 0.0, sensors),
-                new HandoffControlCommand(handoff, sensors, 0.0, false),
-                new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors, false)));
+        m_Xbox2.b_A()
+                .onFalse(new ParallelCommandGroup(
+                        new IntakeControlCommand(intake, 0.0, sensors),
+                        new HandoffControlCommand(handoff, sensors, 0.0, false)));
 
         // Button commands to launch the note.
-        m_Xbox2.b_B().onTrue(new LaunchControlCommand(launcher, MiscMapping.LAUNCH_VELOCITY));
-        m_Xbox2.b_B().onFalse(new LaunchControlCommand(launcher, 0.0));
+        m_Xbox2.b_B()
+                .onTrue(new LaunchControlCommand(launcher, MiscMapping.LAUNCH_VELOCITY));
+        m_Xbox2.b_B()
+                .onFalse(new LaunchControlCommand(launcher, 0.0));
 
+        // Move Handoff as long as the button is pressed.
         m_Xbox2.b_RightBumper()
-                .onTrue(new ParallelCommandGroup(
-                        new HandoffControlCommand(handoff, sensors, MiscMapping.HANDOFF_SPEED,
-                                true),
-                        new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION,
-                                sensors, false)));
+                .onTrue(new HandoffControlCommand(handoff, sensors, MiscMapping.HANDOFF_SPEED, true));
         m_Xbox2.b_RightBumper()
-                .onFalse(new ParallelCommandGroup(
-                        new HandoffControlCommand(handoff, sensors, 0.0, false),
-                        new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION,
-                                sensors, false)));
+                .onFalse(new HandoffControlCommand(handoff, sensors, 0.0, false));
 
-        // Button commands to control for AMP.
-        m_Xbox2.b_Y().onTrue(new IntakeExtendInstantCommand(intakeExtend, sensors));
-
+        // Reverse the velocity to reverse the Note.
         m_Xbox2.b_LeftBumper()
-                .onTrue(new ParallelCommandGroup(
-                        new IntakeControlCommand(intake, MiscMapping.AMP_VELOCITY, sensors),
-                        new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION,
-                                sensors, false)));
-        m_Xbox2.b_LeftBumper().onFalse(new ParallelCommandGroup(new IntakeControlCommand(intake, 0.0, sensors),
-                new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors, false)));
+                .onTrue(new IntakeControlCommand(intake, MiscMapping.REVERSE_VELOCITY, sensors));
+        m_Xbox2.b_LeftBumper()
+                .onFalse(new IntakeControlCommand(intake, 0.0, sensors));
 
         // Choose either to deliver at the Amp or Speaker.
-        m_Xbox.b_A().onTrue(new SetDeliverySelectorInstantCommand(sensors, false)); // Speaker
-        m_Xbox.b_B().onTrue(new SetDeliverySelectorInstantCommand(sensors, true)); // Amp
-
-        // "Phantom Button"
-        m_Xbox2.b_X()
-                .onTrue(new ParallelCommandGroup(
-                        new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_PHANTOM_POSITION,
-                                sensors, false),
-                        new IntakeRetractInstantCommand(intakeExtend, sensors)));
-        m_Xbox2.b_X()
-                .onFalse(new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors, false));
+        m_Xbox.b_A()
+                .onTrue(new SetDeliverySelectorInstantCommand(sensors, false)); // Speaker
+        m_Xbox.b_B()
+                .onTrue(new SetDeliverySelectorInstantCommand(sensors, true)); // Amp
 
         // Turbo Button
         m_Xbox.b_RightBumper()
@@ -282,13 +251,6 @@ public class RobotContainer {
 
     public void teleopInit() {
         driveTrain.setBrakeMode(MiscMapping.BRAKE_OFF);
-        intakeExtend.IntakeIn();
-        // CommandScheduler.getInstance().schedule(ArmLiftPIDControlCommand(armLift,
-        // MiscMapping.ARM_UP_POSITION));
-        var command = new ParallelCommandGroup(
-                new ArmLiftPIDControlCommand(armLift, MiscMapping.ARM_UP_POSITION, sensors, false));
-
-        CommandScheduler.getInstance().schedule(command);
     }
 
     public void autonomousInit() {

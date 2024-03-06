@@ -28,12 +28,12 @@ public final class Constants {
         public static final int HANDOFF_TALONSRX = 12;
         public static final int LAUNCH_SPARKMAX_B = 13;
         public static final int LAUNCH_SPARKMAX_T = 14;
-        public static final int INTAKE_SPARKMAX_LIFT = 15;
-        public static final int CLIMB_SPARKMAX = 16;
+        public static final int CLIMB_SPARKMAX = 15;
+        public static final int INTAKE_SPARKMAX_B = 16;
+        public static final int INTAKE_SPARKMAX_T = 17;
 
         // MISC CAN Bus
         public static final int PIGEON_IMU = 20;
-        public static final int PNEUMATIC_HUB = 5;
     }
 
     public static final class ControllerMapping {
@@ -41,41 +41,31 @@ public final class Constants {
         public static final int XBOX2 = 1;
     }
 
-    public static final class PneumaticsMapping {
-        // Pneumatics Control Module
-        public static final int PNEUMATIC_SINGLE_SOLENOID_EXTEND = 0;
-        public static final int PNEUMATIC_SINGLE_SOLENOID_RETRACT = 1;
-    }
-
     public static final class DIOMapping {
-        public static final int INTAKE_SENSOR = 0;
-        public static final int HANDOFF_SENSOR = 1;
-        public static final int ARM_LIFT_ENCODER = 2;
-        public static final int HANDOFF_SPEED_SENSOR = 3;
+        public static final int HANDOFF_SENSOR = 0;
+        public static final int HANDOFF_SPEED_SENSOR = 1;
+        public static final int INTAKE_SENSOR = 2;
     }
 
     public static final class MiscMapping {
         public static final boolean BRAKE_ON = true;
         public static final boolean BRAKE_OFF = false;
         public static final boolean FIELD_RELATIVE = true;
-        public static final double MAXSPEED = 0.7;
+        public static final double MAXSPEED = 1;
         public static final double MAXANGULARSPEED = 0.8;
         public static final double LAUNCH_VELOCITY = 0.6;
         public static final double INTAKE_VELOCITY = -25;
         public static final double HANDOFF_SPEED = 0.7;
-        public static final double ARM_PID_TOLERANCE = 0.05;
-        public static final double ARM_UP_POSITION = 0.62;
-        public static final double ARM_PHANTOM_POSITION = 0.65;
-        public static final double ARM_DOWN_POSITION = 0.8;
-        public static final double AMP_VELOCITY = 20;
+        public static final double REVERSE_VELOCITY = 20;
         public static final double NORMAL_MULTIPLIER = 0.3;
         public static final double TURBO_MULTIPLIER = 1;
-        public static final double xConversionInches = 39.2/77; // 39.2 units / 77 inches
-        public static final double yConversionInches = -39.47/78; // negate so left is negative, right is positive
+        public static final double xConversionInches = 39.2 / 77; // 39.2 units / 77 inches
+        public static final double yConversionInches = -39.47 / 78; // negate so left is negative, right is positive
     }
 
     public static final class TalonMapping {
         public static final double PID_P = 0.11;// An error of 1 rotation per second results in 2V output
+
         public static final double PID_I = 0.5; // An error of 1 rotation per second increases output by 0.5V every
                                                 // second
         public static final double PID_D = 0.0001; // A change of 1 rotation per second squared results in 0.01 volts
@@ -83,6 +73,7 @@ public final class Constants {
         public static final double PID_V = 0.12; // Falcon 500 is a 500kV motor, 500rpm per V = 8.333 rps per V, 1/8.33
                                                  // = 0.12 volts / Rotation per second
         public static final double PEAK_VOLTAGE = 11; // Peak output of X volts on a Falcon.
+
         public static final double PEAK_AMPERAGE = 80; // Peak output of X amps on a Falcon.
     }
 
@@ -118,7 +109,7 @@ public final class Constants {
         public static final Translation2d LOCATION_BACK_RIGHT = new Translation2d(-0.238, -0.238);
 
         public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
-            LOCATION_FRONT_LEFT, LOCATION_FRONT_RIGHT, LOCATION_BACK_LEFT, LOCATION_BACK_RIGHT);
+                LOCATION_FRONT_LEFT, LOCATION_FRONT_RIGHT, LOCATION_BACK_LEFT, LOCATION_BACK_RIGHT);
 
         public static final PIDConfig PID_X = new PIDConfig(0.04, 0, 0, 3);
         public static final PIDConfig PID_Y = new PIDConfig(0.04, 0, 0, 3);

@@ -5,7 +5,6 @@
 package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DIOMapping;
@@ -16,7 +15,6 @@ public class Sensors extends SubsystemBase {
   private DigitalInput handoffSpeedSensor = new DigitalInput(DIOMapping.HANDOFF_SPEED_SENSOR);
   private DigitalInput handoffSensor = new DigitalInput(DIOMapping.HANDOFF_SENSOR);
   private DigitalInput intakeSensor = new DigitalInput(DIOMapping.INTAKE_SENSOR);
-  private DutyCycleEncoder armEncoder = new DutyCycleEncoder(DIOMapping.ARM_LIFT_ENCODER);
   private boolean deliverySelector;
   private double speedMultiplier;
   private static Sensors instance;
@@ -39,7 +37,6 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putBoolean("Handoff Sensor", getHandOffSensor());
     SmartDashboard.putBoolean("Intake Sensor", getIntakeSensor());
     SmartDashboard.putBoolean("Delivery Selector", getDeliverySelector());
-    SmartDashboard.putNumber("Arm Position", getArmEncoderAbsolute());
     SmartDashboard.putBoolean("Handoff Speed Sensor", getHandOffSpeedSensor());
   }
 
@@ -69,9 +66,5 @@ public class Sensors extends SubsystemBase {
 
   public void setSpeedMultiplier(double multiplier) {
   speedMultiplier = multiplier;
-  }
-
-  public double getArmEncoderAbsolute() {
-    return armEncoder.getAbsolutePosition();
   }
 }
