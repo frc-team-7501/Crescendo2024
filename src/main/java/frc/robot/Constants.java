@@ -54,7 +54,7 @@ public final class Constants {
         public static final double MAXSPEED = 1;
         public static final double MAXANGULARSPEED = 0.8;
         public static final double LAUNCH_VELOCITY = 0.6;
-        public static final double INTAKE_VELOCITY = -25;
+        public static final double INTAKE_SPEED = 5;
         public static final double HANDOFF_SPEED = 0.7;
         public static final double REVERSE_VELOCITY = 20;
         public static final double NORMAL_MULTIPLIER = 0.3;

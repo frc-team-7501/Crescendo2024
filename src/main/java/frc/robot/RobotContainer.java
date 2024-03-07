@@ -82,7 +82,7 @@ public class RobotContainer {
             // point
             new ParallelCommandGroup(
                     new AutonDriveCommand(driveTrain, new Pose2d(60, 0, new Rotation2d(0))),
-                    new AutonIntakeCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors),
+                    new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
                     new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true)),
             // Stop intake and handoff once Note is in-place
             new AutonIntakeCommand(intake, 0.0, sensors),
@@ -107,7 +107,7 @@ public class RobotContainer {
             new ParallelCommandGroup(
                     new AutonDriveCommand(driveTrain,
                             new Pose2d(60, 60, new Rotation2d((Math.PI / 180) * -50))),
-                    new AutonIntakeCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors),
+                    new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
                     new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true)),
             // Stop intake and handoff once Note is in-place
             new AutonIntakeCommand(intake, 0.0, sensors),
@@ -161,7 +161,7 @@ public class RobotContainer {
 
             new SequentialCommandGroup(
                 new ParallelCommandGroup(
-                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors),
+                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
                         new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED / 2, sensors, true)
                 ),
 
@@ -210,7 +210,7 @@ public class RobotContainer {
         // Button commands to intake the note.
         m_Xbox2.b_A()
                 .onTrue(new ParallelCommandGroup(
-                        new IntakeControlCommand(intake, MiscMapping.INTAKE_VELOCITY, sensors),
+                        new IntakeControlCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
                         new HandoffControlCommand(handoff, sensors, MiscMapping.HANDOFF_SPEED, false)));
 
         m_Xbox2.b_A()
@@ -235,12 +235,6 @@ public class RobotContainer {
                 .onTrue(new IntakeControlCommand(intake, MiscMapping.REVERSE_VELOCITY, sensors));
         m_Xbox2.b_LeftBumper()
                 .onFalse(new IntakeControlCommand(intake, 0.0, sensors));
-
-        // Choose either to deliver at the Amp or Speaker.
-        m_Xbox.b_A()
-                .onTrue(new SetDeliverySelectorInstantCommand(sensors, false)); // Speaker
-        m_Xbox.b_B()
-                .onTrue(new SetDeliverySelectorInstantCommand(sensors, true)); // Amp
 
         // Turbo Button
         m_Xbox.b_RightBumper()
