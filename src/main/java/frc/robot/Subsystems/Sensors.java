@@ -15,14 +15,14 @@ public class Sensors extends SubsystemBase {
   private DigitalInput handoffSpeedSensor = new DigitalInput(DIOMapping.HANDOFF_SPEED_SENSOR);
   private DigitalInput handoffSensor = new DigitalInput(DIOMapping.HANDOFF_SENSOR);
   private DigitalInput intakeSensor = new DigitalInput(DIOMapping.INTAKE_SENSOR);
-  private boolean deliverySelector;
+  // private boolean deliverySelector;
   private boolean isFieldCentric;
   private double speedMultiplier;
   private static Sensors instance;
 
   public Sensors() {
   //Set the default delivery method to Launcher.
-    deliverySelector = true;
+    // deliverySelector = true;
     isFieldCentric = true;
     speedMultiplier = MiscMapping.NORMAL_MULTIPLIER;
   }
@@ -38,7 +38,7 @@ public class Sensors extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Handoff Sensor", getHandOffSensor());
     SmartDashboard.putBoolean("Intake Sensor", getIntakeSensor());
-    SmartDashboard.putBoolean("Delivery Selector", getDeliverySelector());
+    // SmartDashboard.putBoolean("Delivery Selector", getDeliverySelector());
     SmartDashboard.putBoolean("Handoff Speed Sensor", getHandOffSpeedSensor());
     SmartDashboard.putBoolean("Field Centric", getIsFieldCentric());
 
@@ -56,13 +56,13 @@ public class Sensors extends SubsystemBase {
     return !intakeSensor.get();
   }
 
-  public boolean getDeliverySelector() {
-    return deliverySelector;
-  }
+  // public boolean getDeliverySelector() {
+  //   return deliverySelector;
+  // }
 
-  public void setDeliverySelector(boolean selector) {
-  deliverySelector = selector;
-  }
+  // public void setDeliverySelector(boolean selector) {
+  // deliverySelector = selector;
+  // }
 
   public boolean getIsFieldCentric() {
     return isFieldCentric;

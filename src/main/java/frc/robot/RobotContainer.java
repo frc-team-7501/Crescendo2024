@@ -209,7 +209,9 @@ public class RobotContainer {
                         new IntakeControlCommand(intake, MiscMapping.REVERSE_INTAKE_SPEED, sensors),
                         new HandoffControlCommand(handoff, sensors, MiscMapping.REVERSE_HANDOFF_SPEED, false)));
         m_Xbox2.b_LeftBumper()
-                .onFalse(new IntakeControlCommand(intake, 0.0, sensors));
+                .onFalse(new ParallelCommandGroup(
+                        new IntakeControlCommand(intake, 0.0, sensors),
+                        new HandoffControlCommand(handoff, sensors, MiscMapping.REVERSE_HANDOFF_SPEED, false)));
 
         // Turbo Button
         m_Xbox.b_RightBumper()

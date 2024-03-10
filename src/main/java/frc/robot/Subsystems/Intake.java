@@ -6,10 +6,8 @@ package frc.robot.Subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANMapping;
-import frc.robot.Constants.MiscMapping;
 
 public class Intake extends SubsystemBase {
   private final CANSparkMax m_IntakeMotorT = new CANSparkMax(CANMapping.INTAKE_SPARKMAX_T, MotorType.kBrushless);
@@ -30,8 +28,8 @@ public class Intake extends SubsystemBase {
       m_IntakeMotorT.set(0.0);
       m_IntakeMotorB.set(0.0);
     } else {
-      m_IntakeMotorT.set(MiscMapping.INTAKE_SPEED);
-      m_IntakeMotorB.set(-MiscMapping.INTAKE_SPEED);
+      m_IntakeMotorT.set(velocity);
+      m_IntakeMotorB.set(velocity);
     }
 
     // SmartDashboard.putNumber("velocity", velocity);
@@ -45,6 +43,5 @@ public class Intake extends SubsystemBase {
   public void stop() {
     m_IntakeMotorT.stopMotor();
     m_IntakeMotorB.stopMotor();
-
   }
 }

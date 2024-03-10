@@ -41,11 +41,7 @@ public class HandoffControlCommand extends Command {
     }
 
     // Decide if the intake stops for the AMP or Speaker
-     if (sensors.getDeliverySelector()) {
       Handoff.fireHandoff(myhandoffSpeed, override, sensors.getHandOffSensor());
-    } else {
-      Handoff.fireHandoff(myhandoffSpeed, override, sensors.getIntakeSensor());
-    }
   }
 
   // Called once the command ends or is interrupted.
