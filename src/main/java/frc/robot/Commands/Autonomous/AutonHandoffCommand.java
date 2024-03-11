@@ -4,7 +4,7 @@
 
 package frc.robot.Commands.Autonomous;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Handoff;
 import frc.robot.Subsystems.Sensors;
@@ -43,7 +43,6 @@ public class AutonHandoffCommand extends Command {
   public void end(boolean interrupted) {
     // handoff.fireHandoff(0.0, interrupted, true);
     // handoff.stop();
-    SmartDashboard.putBoolean("handoff if", true);
   }
 
   // Returns true when the command should end.

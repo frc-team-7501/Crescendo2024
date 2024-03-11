@@ -130,11 +130,11 @@ public class Drivetrain extends SubsystemBase {
     // the right by default.
     final var rot = -m_rotLimiter.calculate(MathUtil.applyDeadband(rotate, 0.02)) * Drivetrain.kMaxAngularSpeed;
 
-    SmartDashboard.putNumber("xSpeed", xSpeed);
-    SmartDashboard.putNumber("ySpeed", ySpeed);
-    SmartDashboard.putNumber("rotation", rot);
-    SmartDashboard.putNumber("back left position", m_backRight.showRotation() % (Math.PI * 2));
-    SmartDashboard.putNumber("back left turn output", m_backRight.showTurnPower());
+    //SmartDashboard.putNumber("xSpeed", xSpeed);
+    //SmartDashboard.putNumber("ySpeed", ySpeed);
+    //SmartDashboard.putNumber("rotation", rot);
+    //SmartDashboard.putNumber("back left position", m_backRight.showRotation() % (Math.PI * 2));
+    //SmartDashboard.putNumber("back left turn output", m_backRight.showTurnPower());
     SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
 
     if (fieldRelative) {
@@ -147,7 +147,7 @@ public class Drivetrain extends SubsystemBase {
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
 
-    SmartDashboard.putString("desired state", swerveModuleStates[3].toString());
+    //SmartDashboard.putString("desired state", swerveModuleStates[3].toString());
 
     setModuleStates(swerveModuleStates);
     // m_frontLeft.setDesiredState(swerveModuleStates[0]);
@@ -205,8 +205,8 @@ public class Drivetrain extends SubsystemBase {
             m_backRight.getPosition()
         });
 
-    SmartDashboard.putNumber("X", m_odometry.getPoseMeters().getX() / MiscMapping.xConversionInches);
-    SmartDashboard.putNumber("Y", m_odometry.getPoseMeters().getY() / MiscMapping.yConversionInches);
-    SmartDashboard.putNumber("Heading", m_odometry.getPoseMeters().getRotation().getDegrees());
+    //SmartDashboard.putNumber("X", m_odometry.getPoseMeters().getX() / MiscMapping.xConversionInches);
+    //SmartDashboard.putNumber("Y", m_odometry.getPoseMeters().getY() / MiscMapping.yConversionInches);
+    //SmartDashboard.putNumber("Heading", m_odometry.getPoseMeters().getRotation().getDegrees());
   }
 }

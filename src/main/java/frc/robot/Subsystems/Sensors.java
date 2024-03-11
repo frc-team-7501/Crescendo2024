@@ -37,9 +37,9 @@ public class Sensors extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Handoff Sensor", getHandOffSensor());
-    SmartDashboard.putBoolean("Intake Sensor", getIntakeSensor());
+    //SmartDashboard.putBoolean("Intake Sensor", getIntakeSensor());
     // SmartDashboard.putBoolean("Delivery Selector", getDeliverySelector());
-    SmartDashboard.putBoolean("Handoff Speed Sensor", getHandOffSpeedSensor());
+    //SmartDashboard.putBoolean("Handoff Speed Sensor", getHandOffSpeedSensor());
     SmartDashboard.putBoolean("Field Centric", getIsFieldCentric());
 
   }
