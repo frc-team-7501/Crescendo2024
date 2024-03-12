@@ -2,7 +2,7 @@ package frc.robot.Commands.Autonomous;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.MiscMapping;
@@ -55,8 +55,8 @@ public class AutonDriveCommand extends Command {
         //SmartDashboard.putNumber("outputT", outputT);
 
         // drivetrain.driveRawFieldRelative
-        outputX = clampOutput(outputX, 0.2); 
-        outputY = clampOutput(outputY, 0.2); 
+        outputX = clampOutput(outputX, 0.3); 
+        outputY = clampOutput(outputY, 0.3); 
         outputT = clampOutput(outputT, 0.75);
 
         //.putNumber("Clamped outputX", outputX);
@@ -69,9 +69,9 @@ public class AutonDriveCommand extends Command {
     @Override
     public boolean isFinished() {
         
-        //SmartDashboard.putBoolean("x atSetpoint", xController.atSetpoint());
-        //SmartDashboard.putBoolean("y atSetpoint", yController.atSetpoint());
-        //SmartDashboard.putBoolean("angle atSetpoint", angleController.atSetpoint());
+        SmartDashboard.putBoolean("x atSetpoint", xController.atSetpoint());
+        SmartDashboard.putBoolean("y atSetpoint", yController.atSetpoint());
+        SmartDashboard.putBoolean("angle atSetpoint", angleController.atSetpoint());
 
         boolean condition = xController.atSetpoint() && yController.atSetpoint() && angleController.atSetpoint();
 

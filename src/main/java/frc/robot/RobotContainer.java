@@ -60,17 +60,19 @@ public class RobotContainer {
             new AutonHandoffCommand(handoff, 0.0, sensors, true),
             new AutonLauncherCommand(launcher, 0.0),
 
-            // Spin intake and handoff until a Note is in the launcher and drive to pickup point.
+            // Spin intake and handoff until a Note is in the launcher and drive to pickup
+            // point.
             new ParallelCommandGroup(
                     new AutonDriveCommand(driveTrain, new Pose2d(60, 0, new Rotation2d(0))),
                     new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
                     new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true)),
-            
+
             // Stop intake and handoff once Note is in-place
             new AutonIntakeCommand(intake, 0.0, sensors),
             new AutonHandoffCommand(handoff, 0.0, sensors, false),
 
-            // Spin up launcher (wait 1.5 seconds for ramp-up) and drive to shooting position.
+            // Spin up launcher (wait 1.5 seconds for ramp-up) and drive to shooting
+            // position.
             new ParallelCommandGroup(
                     new SequentialCommandGroup(
                             new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
@@ -83,7 +85,8 @@ public class RobotContainer {
             new AutonHandoffCommand(handoff, 0.0, sensors, true),
             new AutonLauncherCommand(launcher, 0.0),
 
-            // Spin intake and handoff until a Note is in the launcher and drive to pickup point.
+            // Spin intake and handoff until a Note is in the launcher and drive to pickup
+            // point.
             new ParallelCommandGroup(
                     new AutonDriveCommand(driveTrain,
                             new Pose2d(60, 60, new Rotation2d((Math.PI / 180) * -50))),
@@ -94,7 +97,8 @@ public class RobotContainer {
             new AutonIntakeCommand(intake, 0.0, sensors),
             new AutonHandoffCommand(handoff, 0.0, sensors, false),
 
-            // Spin up launcher (wait 1.5 seconds for ramp-up) and drive to shooting position.
+            // Spin up launcher (wait 1.5 seconds for ramp-up) and drive to shooting
+            // position.
             new ParallelCommandGroup(
                     new SequentialCommandGroup(
                             new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
@@ -117,7 +121,7 @@ public class RobotContainer {
                     new WaitCommand(1.5),
                     // Fire for 1.0 second
                     new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true),
-                    new WaitCommand(1.0),
+                    new WaitCommand(0.5),
                     // Stop launcher/handoff after fire
                     new AutonHandoffCommand(handoff, 0.0, sensors, true),
                     new AutonLauncherCommand(launcher, 0.0));
@@ -131,9 +135,9 @@ public class RobotContainer {
             new ParallelCommandGroup(
                     new LaunchAuton(launcher, sensors, handoff)),
 
-            new WaitCommand(1.0), // Wait for launcher to spin down
+            new WaitCommand(1.0), // Wait for launcher to spin down.
 
-            // Spin intake and handoff until a Note is in the launcher AND drive
+            // Spin intake and handoff until a Note is in the launcher AND drive.
             new ParallelCommandGroup(
                     new AutonDriveCommand(driveTrain, new Pose2d(70, 0, new Rotation2d(0))),
 
@@ -142,9 +146,24 @@ public class RobotContainer {
                                     new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
                                     new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED / 2, sensors, true)),
 
-                            // Stop intake and handoff once Note is in-place
-                            new AutonIntakeCommand(intake, 0.0, sensors),
-                            new AutonHandoffCommand(handoff, 0.0, sensors, false))));
+                            // Stop intake and handoff once Note is in-place.
+                            // new AutonIntakeCommand(intake, 0.0, sensors),
+                            new AutonHandoffCommand(handoff, 0.0, sensors, false))),
+            // Move back to the center position and fire the Launcher.
+            new SequentialCommandGroup(
+                    new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(0))),
+                    new LaunchAuton(launcher, sensors, handoff)),
+            new ParallelCommandGroup(
+                    new AutonDriveCommand(driveTrain,new Pose2d(70, 60, new Rotation2d((Math.PI / 180) * -30))),
+                    new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
+                    new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, false),
+            // Stop intake and handoff once Note is in-place.
+                            // new AutonIntakeCommand(intake, 0.0, sensors),
+                            new AutonHandoffCommand(handoff, 0.0, sensors, false)),
+            // Move back to the center position and fire the Launcher.
+            new SequentialCommandGroup(
+                    new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(0))),
+                    new LaunchAuton(launcher, sensors, handoff)));
 
     // #endregion
 
@@ -211,7 +230,7 @@ public class RobotContainer {
         m_Xbox2.b_LeftBumper()
                 .onFalse(new ParallelCommandGroup(
                         new IntakeControlCommand(intake, 0.0, sensors),
-                        new HandoffControlCommand(handoff, sensors, MiscMapping.REVERSE_HANDOFF_SPEED, false)));
+                        new HandoffControlCommand(handoff, sensors, 0.0, false)));
 
         // Turbo Button
         m_Xbox.b_RightBumper()
@@ -219,7 +238,7 @@ public class RobotContainer {
         m_Xbox.b_RightBumper()
                 .onFalse(new SetSpeedMultiplierInstantCommand(sensors, MiscMapping.NORMAL_MULTIPLIER));
 
-        // Field Centric Toggle        
+        // Field Centric Toggle
         m_Xbox.b_LeftBumper()
                 .onTrue(new SetIsFieldCentricInstantCommand(sensors, false));
         m_Xbox.b_LeftBumper()
