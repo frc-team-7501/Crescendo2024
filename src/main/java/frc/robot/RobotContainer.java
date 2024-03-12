@@ -153,10 +153,10 @@ public class RobotContainer {
             new SequentialCommandGroup(
                     new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(0))),
                     new LaunchAuton(launcher, sensors, handoff)),
-            new ParallelCommandGroup(
-                    new AutonDriveCommand(driveTrain,new Pose2d(70, 60, new Rotation2d((Math.PI / 180) * -30))),
+            new SequentialCommandGroup(
+                    new ParallelCommandGroup(new AutonDriveCommand(driveTrain,new Pose2d(70, 60, new Rotation2d((Math.PI / 180) * -30))),
                     new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
-                    new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, false),
+                    new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, false)),
             // Stop intake and handoff once Note is in-place.
                             // new AutonIntakeCommand(intake, 0.0, sensors),
                             new AutonHandoffCommand(handoff, 0.0, sensors, false)),
