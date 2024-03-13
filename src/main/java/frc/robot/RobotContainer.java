@@ -116,55 +116,151 @@ public class RobotContainer {
     // #endregion
     // #region
     private static class LaunchAuton extends SequentialCommandGroup {
-        public LaunchAuton(Launcher launcher, Sensors sensors, Handoff handoff) {
-            super(new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
-                    new WaitCommand(1.5),
+        public LaunchAuton(Sensors sensors, Handoff handoff) {
+            super(
+                    new WaitCommand(0.25),
                     // Fire for 1.0 second
                     new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true),
                     new WaitCommand(0.5),
                     // Stop launcher/handoff after fire
-                    new AutonHandoffCommand(handoff, 0.0, sensors, true),
-                    new AutonLauncherCommand(launcher, 0.0));
+                    new AutonHandoffCommand(handoff, 0.0, sensors, true));
         }
     }
-
-    private final Command BaseAuton = new SequentialCommandGroup(
+    // #endregion
+    // #region Two Note Right
+    private final Command TwoNoteRight = new SequentialCommandGroup(
             new InstantCommand(
                     () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
                     driveTrain),
             new ParallelCommandGroup(
-                    new LaunchAuton(launcher, sensors, handoff)),
-
-            new WaitCommand(1.0), // Wait for launcher to spin down.
-
+                new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+                new LaunchAuton(sensors, handoff)),
+                    new SequentialCommandGroup(
+                    new ParallelCommandGroup(
+                            new AutonDriveCommand(driveTrain,
+                                    new Pose2d(62, -50, new Rotation2d((Math.PI / 180) * 40))),
+                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
+                            new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, false)),
+                    // Stop handoff once Note is in-place.
+                    new AutonHandoffCommand(handoff, 0.0, sensors, false)),
+                new AutonDriveCommand(driveTrain, new Pose2d(20, 0, new Rotation2d(0))),
+            // Move back to the center position and fire the Launcher.
+            new SequentialCommandGroup(
+                    new AutonDriveCommand(driveTrain, new Pose2d(2, 0, new Rotation2d(0))),
+                    new LaunchAuton(sensors, handoff)),
+                new AutonDriveCommand(driveTrain,
+                new Pose2d(60, -60, new Rotation2d((Math.PI / 180) * 50))));    
+    // #endregion
+    // #region Two Note Left
+    private final Command TwoNoteLeft = new SequentialCommandGroup(
+            new InstantCommand(
+                    () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+                    driveTrain),
+            new ParallelCommandGroup(
+                new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+                new LaunchAuton(sensors, handoff)),
+                    new SequentialCommandGroup(
+                    new ParallelCommandGroup(
+                            new AutonDriveCommand(driveTrain,
+                                    new Pose2d(60, 60, new Rotation2d((Math.PI / 180) * -50))),
+                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
+                            new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, false)),
+                    // Stop handoff once Note is in-place.
+                    new AutonHandoffCommand(handoff, 0.0, sensors, false)),
+                new AutonDriveCommand(driveTrain, new Pose2d(20, 0, new Rotation2d(0))),
+            // Move back to the center position and fire the Launcher.
+            new SequentialCommandGroup(
+                    new AutonDriveCommand(driveTrain, new Pose2d(2, 0, new Rotation2d(0))),
+                    new LaunchAuton(sensors, handoff)),
+                new AutonDriveCommand(driveTrain,
+                new Pose2d(60, 60, new Rotation2d((Math.PI / 180) * -50))));    
+    // #endregion
+    // #region Four Note Auton Proto
+    private final Command FourNoteAuton = new SequentialCommandGroup(
+            new InstantCommand(
+                    () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+                    driveTrain),
+            new ParallelCommandGroup(
+                    new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+                    new LaunchAuton(sensors, handoff)),
             // Spin intake and handoff until a Note is in the launcher AND drive.
             new ParallelCommandGroup(
-                    new AutonDriveCommand(driveTrain, new Pose2d(70, 0, new Rotation2d(0))),
+                    new AutonDriveCommand(driveTrain, new Pose2d(60, 5, new Rotation2d(0))),
 
                     new SequentialCommandGroup(
                             new ParallelCommandGroup(
                                     new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
                                     new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED / 2, sensors, true)),
 
-                            // Stop intake and handoff once Note is in-place.
-                            // new AutonIntakeCommand(intake, 0.0, sensors),
+                            // Stop handoff once Note is in-place.
+                            new AutonHandoffCommand(handoff, 0.0, sensors, false))),
+            // Move back to the center position and fire the Launcher.
+            new SequentialCommandGroup(
+                    new AutonDriveCommand(driveTrain, new Pose2d(2, 0, new Rotation2d(0))),
+                    new LaunchAuton(sensors, handoff)),
+            new SequentialCommandGroup(
+                    new ParallelCommandGroup(
+                            new AutonDriveCommand(driveTrain, new Pose2d(60, 55, new Rotation2d((Math.PI / 180) * -50))),
+                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
+                            new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, false)),
+                    // Stop handoff once Note is in-place.
+                    new AutonHandoffCommand(handoff, 0.0, sensors, false)),
+            // Move back to the center position and fire the Launcher.
+            new SequentialCommandGroup(
+                    new AutonDriveCommand(driveTrain, new Pose2d(2, 2, new Rotation2d(0))),
+                    new LaunchAuton(sensors, handoff)),
+            new SequentialCommandGroup(
+                    new ParallelCommandGroup(
+                            new AutonDriveCommand(driveTrain, new Pose2d(62, -50, new Rotation2d((Math.PI / 180) * 10))),
+                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
+                            new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, false)),
+             // Stop handoff once Note is in-place.
+                    new AutonHandoffCommand(handoff, 0.0, sensors, false),
+            // Move back to the center position and fire the Launcher.
+            new SequentialCommandGroup(
+                    new AutonDriveCommand(driveTrain, new Pose2d(2, -2, new Rotation2d(0))),
+                    new LaunchAuton(sensors, handoff))));
+    // #endregion
+    // #region Three Note Base
+    private final Command ThreeNoteAuton = new SequentialCommandGroup(
+            new InstantCommand(
+                    () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+                    driveTrain),
+            new ParallelCommandGroup(
+                    new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+                    new LaunchAuton(sensors, handoff)),
+
+            new WaitCommand(1.0), // Wait for launcher to spin down.
+
+            // Spin intake and handoff until a Note is in the launcher AND drive.
+            new ParallelCommandGroup(
+                    new AutonDriveCommand(driveTrain, new Pose2d(60, 0, new Rotation2d(0))),
+
+                    new SequentialCommandGroup(
+                            new ParallelCommandGroup(
+                                    new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
+                                    new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED / 2, sensors, true)),
+
+                            // Stop handoff once Note is in-place.
                             new AutonHandoffCommand(handoff, 0.0, sensors, false))),
             // Move back to the center position and fire the Launcher.
             new SequentialCommandGroup(
                     new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(0))),
-                    new LaunchAuton(launcher, sensors, handoff)),
+                    new LaunchAuton(sensors, handoff)),
             new SequentialCommandGroup(
-                    new ParallelCommandGroup(new AutonDriveCommand(driveTrain,new Pose2d(70, 60, new Rotation2d((Math.PI / 180) * -30))),
-                    new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
-                    new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, false)),
-            // Stop intake and handoff once Note is in-place.
-                            // new AutonIntakeCommand(intake, 0.0, sensors),
-                            new AutonHandoffCommand(handoff, 0.0, sensors, false)),
+                    new ParallelCommandGroup(
+                            new AutonDriveCommand(driveTrain,
+                                    new Pose2d(60, 55, new Rotation2d((Math.PI / 180) * -50))),
+                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
+                            new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, false)),
+                    // Stop handoff once Note is in-place.
+                    new AutonHandoffCommand(handoff, 0.0, sensors, false)),
             // Move back to the center position and fire the Launcher.
             new SequentialCommandGroup(
                     new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(0))),
-                    new LaunchAuton(launcher, sensors, handoff)));
-
+                    new LaunchAuton(sensors, handoff)),
+            new AutonDriveCommand(driveTrain, new Pose2d(70, 0, new Rotation2d(0))));
+    // #endregion
     // #endregion
 
     // Create commands
@@ -279,6 +375,9 @@ public class RobotContainer {
         // DefaultAuton
 
         // return DefaultAuton;
-        return BaseAuton;
+        // return ThreeNoteAuton;
+        return FourNoteAuton;
+        // return TwoNoteLeft;
+        // return TwoNoteRight;
     }
 }

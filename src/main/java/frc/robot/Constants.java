@@ -54,8 +54,8 @@ public final class Constants {
         public static final double MAXSPEED = 1;
         public static final double MAXANGULARSPEED = 0.8;
         public static final double LAUNCH_VELOCITY = 0.6;
-        public static final double INTAKE_SPEED = 0.5;
-        public static final double HANDOFF_SPEED = 0.7;
+        public static final double INTAKE_SPEED = 0.7;
+        public static final double HANDOFF_SPEED = 0.5;
         public static final double REVERSE_INTAKE_SPEED = -2;
         public static final double REVERSE_HANDOFF_SPEED = -0.7;
         public static final double NORMAL_MULTIPLIER = 0.3;
@@ -112,8 +112,8 @@ public final class Constants {
         public static final SwerveDriveKinematics KINEMATICS = new SwerveDriveKinematics(
                 LOCATION_FRONT_LEFT, LOCATION_FRONT_RIGHT, LOCATION_BACK_LEFT, LOCATION_BACK_RIGHT);
 
-        public static final PIDConfig PID_X = new PIDConfig(0.04, 0, 0, 3);
-        public static final PIDConfig PID_Y = new PIDConfig(0.04, 0, 0, 3);
+        public static final PIDConfig PID_X = new PIDConfig(0.05, 0, 0, 3);
+        public static final PIDConfig PID_Y = new PIDConfig(0.05, 0, 0, 3);
         public static final PIDConfig PID_T = new PIDConfig(1.0, 0, 0, Math.toRadians(4));
     }
 }
