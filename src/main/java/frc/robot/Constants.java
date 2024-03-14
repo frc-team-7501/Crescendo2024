@@ -54,10 +54,10 @@ public final class Constants {
         public static final double MAXSPEED = 1;
         public static final double MAXANGULARSPEED = 0.8;
         public static final double LAUNCH_VELOCITY = 0.6;
-        public static final double INTAKE_SPEED = 0.7;
+        public static final double INTAKE_SPEED = 1.0;
         public static final double HANDOFF_SPEED = 0.5;
-        public static final double REVERSE_INTAKE_SPEED = -2;
-        public static final double REVERSE_HANDOFF_SPEED = -0.7;
+        public static final double REVERSE_INTAKE_SPEED = -1;
+        public static final double REVERSE_HANDOFF_SPEED = -0.5;
         public static final double NORMAL_MULTIPLIER = 0.3;
         public static final double TURBO_MULTIPLIER = 1;
         public static final double xConversionInches = 39.2 / 77; // 39.2 units / 77 inches

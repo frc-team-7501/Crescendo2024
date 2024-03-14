@@ -175,7 +175,7 @@ public class RobotContainer {
                 new AutonDriveCommand(driveTrain,
                 new Pose2d(60, 60, new Rotation2d((Math.PI / 180) * -50))));    
     // #endregion
-    // #region Four Note Auton Proto
+    // #region Four Note Auton
     private final Command FourNoteAuton = new SequentialCommandGroup(
             new InstantCommand(
                     () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
@@ -211,7 +211,7 @@ public class RobotContainer {
                     new LaunchAuton(sensors, handoff)),
             new SequentialCommandGroup(
                     new ParallelCommandGroup(
-                            new AutonDriveCommand(driveTrain, new Pose2d(62, -50, new Rotation2d((Math.PI / 180) * 10))),
+                            new AutonDriveCommand(driveTrain, new Pose2d(62, -53, new Rotation2d((Math.PI / 180) * 10))),
                             new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
                             new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, false)),
              // Stop handoff once Note is in-place.
