@@ -52,8 +52,8 @@ public final class Constants {
         public static final boolean BRAKE_OFF = false;
         public static final boolean FIELD_RELATIVE = true;
         public static final double MAXSPEED = 1;
-        public static final double MAXANGULARSPEED = 0.8;
-        public static final double LAUNCH_VELOCITY = 0.6;
+        public static final double MAXANGULARSPEED = 1;
+        public static final double LAUNCH_VELOCITY = 0.7;
         public static final double INTAKE_SPEED = 1.0;
         public static final double HANDOFF_SPEED = 0.5;
         public static final double REVERSE_INTAKE_SPEED = -1;
@@ -114,6 +114,6 @@ public final class Constants {
 
         public static final PIDConfig PID_X = new PIDConfig(0.05, 0, 0, 3);
         public static final PIDConfig PID_Y = new PIDConfig(0.05, 0, 0, 3);
-        public static final PIDConfig PID_T = new PIDConfig(1.0, 0, 0, Math.toRadians(4));
+        public static final PIDConfig PID_T = new PIDConfig(1.0, 0.1, 0, Math.toRadians(8));
     }
 }

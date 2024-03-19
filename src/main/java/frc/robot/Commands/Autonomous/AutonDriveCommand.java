@@ -33,6 +33,9 @@ public class AutonDriveCommand extends Command {
         xController.setSetpoint(targetPose2d.getX() * MiscMapping.xConversionInches);
         yController.setSetpoint(targetPose2d.getY() * MiscMapping.yConversionInches);
         angleController.setSetpoint(targetPose2d.getRotation().getRadians());
+        // SmartDashboard.putNumber("target X", targetPose2d.getX() * MiscMapping.xConversionInches);
+        // SmartDashboard.putNumber("target Y", targetPose2d.getY() * MiscMapping.yConversionInches);
+        // SmartDashboard.putNumber("target Z", targetPose2d.getRotation().getRadians());
     }
 
     private double clampOutput(double val, double limit) {
@@ -64,6 +67,7 @@ public class AutonDriveCommand extends Command {
         //SmartDashboard.putNumber("Clamped outputT", outputT);
 
         drivetrain.drive(-outputX, -outputY, -outputT, true, 1);
+
     }
 
     @Override
