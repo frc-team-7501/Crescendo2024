@@ -310,9 +310,9 @@ public class RobotContainer {
 
         // Button commands to launch the note.
         m_Xbox2.b_B()
-                .onTrue(new LaunchControlCommand(launcher, MiscMapping.LAUNCH_VELOCITY));
+                .onTrue(new LaunchControlCommand(launcher, MiscMapping.LAUNCH_VELOCITY, MiscMapping.LAUNCH_VELOCITY));
         m_Xbox2.b_B()
-                .onFalse(new LaunchControlCommand(launcher, 0.0));
+                .onFalse(new LaunchControlCommand(launcher, 0.0, 0.0));
 
         // Move Handoff as long as the button is pressed.
         m_Xbox2.b_RightBumper()
@@ -329,6 +329,11 @@ public class RobotContainer {
                 .onFalse(new ParallelCommandGroup(
                         new IntakeControlCommand(intake, 0.0, sensors),
                         new HandoffControlCommand(handoff, sensors, 0.0, false)));
+
+        m_Xbox2.b_X()
+                .onTrue(new LaunchControlCommand(launcher, MiscMapping.LAUNCH_VELOCITY_AMP_T, MiscMapping.LAUNCH_VELOCITY_AMP_B));
+        m_Xbox2.b_X()
+                .onFalse(new LaunchControlCommand(launcher, 0.0, 0.0));
 
         // Turbo Button
         m_Xbox.b_RightBumper()

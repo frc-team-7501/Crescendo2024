@@ -25,7 +25,7 @@ public class AutonLauncherCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    launcher.fireLauncher(velocity);
+    launcher.fireLauncher(velocity, velocity);
   }
 
   // Called once the command ends or is interrupted.

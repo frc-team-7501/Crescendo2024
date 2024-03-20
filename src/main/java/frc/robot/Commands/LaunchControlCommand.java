@@ -10,12 +10,14 @@ import frc.robot.Subsystems.Launcher;
 public class LaunchControlCommand extends Command {
   /** Creates a new LaunchCommand. */
   private final Launcher Launcher;
-  private double launchSpeedDouble;
+  private double launchSpeedDoubleT;
+  private double launchSpeedDoubleB;
 
-  public LaunchControlCommand(Launcher Launcher, Double launchSpeedDouble) {
+  public LaunchControlCommand(Launcher Launcher, Double launchSpeedDoubleT, Double launchSpeedDoubleB) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.Launcher = Launcher;
-    this.launchSpeedDouble = launchSpeedDouble;
+    this.launchSpeedDoubleT = launchSpeedDoubleT;
+    this.launchSpeedDoubleB = launchSpeedDoubleB;
     addRequirements(Launcher);
   }
 
@@ -27,7 +29,7 @@ public class LaunchControlCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Launcher.fireLauncher(launchSpeedDouble);
+    Launcher.fireLauncher(launchSpeedDoubleT, launchSpeedDoubleB);
   }
 
   // Called once the command ends or is interrupted.
