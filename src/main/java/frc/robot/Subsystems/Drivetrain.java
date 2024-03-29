@@ -66,7 +66,6 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setBrakeMode(boolean enabled) {
-    // TODO: Set brake mode to off
     // motorBL.setNeutralMode(enabled ? NeutralMode.Brake : NeutralMode.Coast);
     // motorBR.setNeutralMode(enabled ? NeutralMode.Brake : NeutralMode.Coast);
     // motorFL.setNeutralMode(enabled ? NeutralMode.Brake : NeutralMode.Coast);

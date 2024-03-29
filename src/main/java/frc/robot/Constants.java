@@ -44,7 +44,14 @@ public final class Constants {
     public static final class DIOMapping {
         public static final int HANDOFF_SENSOR = 0;
         public static final int HANDOFF_SPEED_SENSOR = 1;
-        public static final int INTAKE_SENSOR = 2;
+        public static final int PIXY_SENSOR = 2;
+
+        public static final int AUTON_1_INPUT = 10;
+        public static final int AUTON_2_INPUT = 11;
+        public static final int AUTON_3_INPUT = 12;
+        public static final int AUTON_4_INPUT = 13;
+        public static final int AUTON_5_INPUT = 14;
+        public static final int AUTON_ALLIANCE_INPUT = 15;
     }
 
     public static final class MiscMapping {

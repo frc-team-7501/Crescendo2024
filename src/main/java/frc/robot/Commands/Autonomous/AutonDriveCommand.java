@@ -1,7 +1,9 @@
 package frc.robot.Commands.Autonomous;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -14,6 +16,34 @@ public class AutonDriveCommand extends Command {
     private final PIDController yController;
     private final PIDController angleController;
     private final Pose2d targetPose2d;
+    private static final double DriveSpeed = 48;
+    private static final double DriveAcceleration = 72; // *should be in inches/s
+
+    private static final double DriveP = .01;
+    private static final double DriveI = .002;
+
+
+    // trapezoidal PID controller for X position control
+      private final ProfiledPIDController X_PID_Controller=
+      new ProfiledPIDController(
+         DriveP ,
+          DriveI,
+          0,
+          new TrapezoidProfile.Constraints(
+              DriveSpeed,
+              DriveAcceleration));
+
+// trapezoidal PID controller for X position control
+      private final ProfiledPIDController Y_PID_Controller=
+      new ProfiledPIDController(
+         DriveP ,
+          DriveI,
+          0,
+          new TrapezoidProfile.Constraints(
+              DriveSpeed,
+              DriveAcceleration));
+
+   
 
     public AutonDriveCommand(final Drivetrain drivetrain, final Pose2d targetPose2d) {
         super();
@@ -21,19 +51,24 @@ public class AutonDriveCommand extends Command {
         this.drivetrain = drivetrain;
         this.targetPose2d = targetPose2d;
 
+
         xController = Constants.DriveTrain.PID_X.toPIDController();
         yController = Constants.DriveTrain.PID_Y.toPIDController();
         angleController = Constants.DriveTrain.PID_T.toPIDController();
 
-        angleController.enableContinuousInput(-Math.PI, Math.PI); // TODO: what limits does pigeon give??
+        angleController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     @Override
     public void initialize() {
-        xController.setSetpoint(targetPose2d.getX() * MiscMapping.xConversionInches);
-        yController.setSetpoint(targetPose2d.getY() * MiscMapping.yConversionInches);
+       
+        X_PID_Controller.setGoal(targetPose2d.getX() * MiscMapping.xConversionInches);
+        Y_PID_Controller.setGoal(targetPose2d.getY() * MiscMapping.xConversionInches); 
+        X_PID_Controller.setTolerance(3);
+        Y_PID_Controller.setTolerance(3);
+        //yController.setSetpoint(targetPose2d.getY() * MiscMapping.yConversionInches);
         angleController.setSetpoint(targetPose2d.getRotation().getRadians());
-        // SmartDashboard.putNumber("target X", targetPose2d.getX() * MiscMapping.xConversionInches);
+        SmartDashboard.putNumber("target X", targetPose2d.getX());
         // SmartDashboard.putNumber("target Y", targetPose2d.getY() * MiscMapping.yConversionInches);
         // SmartDashboard.putNumber("target Z", targetPose2d.getRotation().getRadians());
     }
@@ -46,16 +81,24 @@ public class AutonDriveCommand extends Command {
     public void execute() {
         Pose2d currentPose = drivetrain.getPose();
 
-        double outputX = xController.calculate(currentPose.getX()); 
-        // double outputX = 0;
-        double outputY = yController.calculate(currentPose.getY());
-        //  double outputY = 0;
-        double outputT = angleController.calculate(currentPose.getRotation().getRadians());
-        // double outputT = 0;
 
-        //SmartDashboard.putNumber("outputX", outputX);
-        //SmartDashboard.putNumber("outputY", outputY);
-        //SmartDashboard.putNumber("outputT", outputT);
+       double outputX = X_PID_Controller.calculate(currentPose.getX());
+       double outputY = Y_PID_Controller.calculate(currentPose.getY());
+       
+        //double outputX = X_PID_Controller.calculate(currentPose.getX(), targetPose2d.getX() * MiscMapping.xConversionInches);
+        //double outputX = xController.calculate(currentPose.getX()); 
+        //double outputX = 0;
+        //double outputY = yController.calculate(currentPose.getY());
+        //double outputY = 0;
+        double outputT = angleController.calculate(currentPose.getRotation().getRadians());
+        //double outputT = 0;
+        
+        SmartDashboard.putNumber("outputX1", outputX);
+        SmartDashboard.putNumber("outputY1", outputY);
+        SmartDashboard.putNumber("outputT1", outputT);
+        SmartDashboard.putNumber("Xpos", currentPose.getX()/MiscMapping.xConversionInches);
+        SmartDashboard.putNumber("Ypos", currentPose.getY()/MiscMapping.yConversionInches);
+        SmartDashboard.putNumber("Tpos", currentPose.getRotation().getRadians());
 
         // drivetrain.driveRawFieldRelative
         outputX = clampOutput(outputX, 0.3); 
@@ -73,11 +116,11 @@ public class AutonDriveCommand extends Command {
     @Override
     public boolean isFinished() {
         
-        SmartDashboard.putBoolean("x atSetpoint", xController.atSetpoint());
-        SmartDashboard.putBoolean("y atSetpoint", yController.atSetpoint());
+        SmartDashboard.putBoolean("x atSetpoint", X_PID_Controller.atSetpoint());
+        SmartDashboard.putBoolean("y atSetpoint", Y_PID_Controller.atSetpoint());
         SmartDashboard.putBoolean("angle atSetpoint", angleController.atSetpoint());
 
-        boolean condition = xController.atSetpoint() && yController.atSetpoint() && angleController.atSetpoint();
+        boolean condition = X_PID_Controller.atGoal() && Y_PID_Controller.atGoal() && angleController.atSetpoint();
 
         //SmartDashboard.putBoolean("condition", condition);
 
