@@ -28,9 +28,9 @@ public final class Constants {
         public static final int HANDOFF_TALONSRX = 12;
         public static final int LAUNCH_SPARKMAX_B = 13;
         public static final int LAUNCH_SPARKMAX_T = 14;
-        // public static final int CLIMB_SPARKMAX = 15;
         public static final int INTAKE_SPARKMAX_B = 15;
         public static final int INTAKE_SPARKMAX_T = 16;
+        public static final int CLIMB_SPARKMAX = 17;
 
         // MISC CAN Bus
         public static final int PIGEON_IMU = 20;
@@ -45,12 +45,15 @@ public final class Constants {
         public static final int HANDOFF_SENSOR = 0;
         public static final int HANDOFF_SPEED_SENSOR = 1;
         public static final int PIXY_SENSOR = 2;
+        public static final int CLIMB_LIMIT_SWITCH_1 = 3;
+        public static final int CLIMB_LIMIT_SWITCH_2 = 4;
 
-        public static final int AUTON_1_INPUT = 10;
-        public static final int AUTON_2_INPUT = 11;
+
+        public static final int AUTON_1_INPUT = 14;
+        public static final int AUTON_2_INPUT = 13;
         public static final int AUTON_3_INPUT = 12;
-        public static final int AUTON_4_INPUT = 13;
-        public static final int AUTON_5_INPUT = 14;
+        public static final int AUTON_4_INPUT = 11;
+        public static final int AUTON_5_INPUT = 10;
         public static final int AUTON_ALLIANCE_INPUT = 15;
     }
 
@@ -62,7 +65,7 @@ public final class Constants {
         public static final double MAXANGULARSPEED = 1;
         public static final double LAUNCH_VELOCITY = 0.7;
         public static final double LAUNCH_VELOCITY_AMP_T = 0.07;
-        public static final double LAUNCH_VELOCITY_AMP_B = 0.16;
+        public static final double LAUNCH_VELOCITY_AMP_B = 0.2;
         public static final double INTAKE_SPEED = 1.0;
         public static final double HANDOFF_SPEED = 0.5;
         public static final double REVERSE_INTAKE_SPEED = -1;

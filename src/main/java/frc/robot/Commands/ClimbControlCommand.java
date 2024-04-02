@@ -2,23 +2,25 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-/*package frc.robot.Commands;
+package frc.robot.Commands;
 
 import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Climb;
+import frc.robot.Subsystems.Sensors;
 
 public class ClimbControlCommand extends Command {
   // Creates a new ClimbControlCommand. 
   private final Climb Climb;
   private final DoubleSupplier ClimbPower;
   private double ClimbPowerDouble;
+  private final Sensors sensors;
 
-  public ClimbControlCommand(Climb Climb, DoubleSupplier ClimbPower) {
+  public ClimbControlCommand(Climb Climb, DoubleSupplier ClimbPower, Sensors sensors) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.Climb = Climb;
     this.ClimbPower = ClimbPower;
+    this.sensors = sensors;
     addRequirements(Climb);
   }
 
@@ -30,7 +32,13 @@ public class ClimbControlCommand extends Command {
   @Override
   public void execute() {
     ClimbPowerDouble = ClimbPower.getAsDouble();
-    Climb.moveClimb(ClimbPowerDouble);
+    // Stop the lift from moving down (only) if either limit switch is triggered
+    // TODO: Only limit it from going down
+    if (sensors.getClimbLimitSwitch()) {
+       Climb.moveClimb(0);
+    } else {
+       Climb.moveClimb(ClimbPowerDouble);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -43,4 +51,3 @@ public class ClimbControlCommand extends Command {
     return false;
   }
 }
-*/

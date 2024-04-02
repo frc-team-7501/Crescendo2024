@@ -34,7 +34,7 @@ public class AutonIntakeCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-     intake.stop();
+     intake.runIntake(0, sensors.getHandOffSensor());
   }
 
   // Returns true when the command should end.

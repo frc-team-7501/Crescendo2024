@@ -16,10 +16,10 @@ public class AutonDriveCommand extends Command {
     private final PIDController yController;
     private final PIDController angleController;
     private final Pose2d targetPose2d;
-    private static final double DriveSpeed = 48;
-    private static final double DriveAcceleration = 72; // *should be in inches/s
+    private static final double DriveSpeed = 96;
+    private static final double DriveAcceleration = 125; // *should be in inches/s
 
-    private static final double DriveP = .01;
+    private static final double DriveP = .02;
     private static final double DriveI = .002;
 
 
@@ -101,8 +101,8 @@ public class AutonDriveCommand extends Command {
         SmartDashboard.putNumber("Tpos", currentPose.getRotation().getRadians());
 
         // drivetrain.driveRawFieldRelative
-        outputX = clampOutput(outputX, 0.3); 
-        outputY = clampOutput(outputY, 0.3); 
+        outputX = clampOutput(outputX, 0.8); 
+        outputY = clampOutput(outputY, 0.8); 
         outputT = clampOutput(outputT, 0.75);
 
         //.putNumber("Clamped outputX", outputX);

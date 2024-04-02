@@ -13,12 +13,12 @@ import frc.robot.Constants.MiscMapping;
 
 public class Sensors extends SubsystemBase {
   /** Creates a new Sensors. */
+  // Handoff Sensors
   private DigitalInput handoffSpeedSensor = new DigitalInput(DIOMapping.HANDOFF_SPEED_SENSOR);
   private DigitalInput handoffSensor = new DigitalInput(DIOMapping.HANDOFF_SENSOR);
-  // private boolean deliverySelector;
-  private boolean isFieldCentric;
-  private double speedMultiplier;
-  private static Sensors instance;
+  // Climb Limit Switches
+  private DigitalInput climbLimitSwitch1 = new DigitalInput(DIOMapping.CLIMB_LIMIT_SWITCH_1);
+  private DigitalInput climbLimitSwitch2 = new DigitalInput(DIOMapping.CLIMB_LIMIT_SWITCH_2);
   // Auton DIO Selector
   private DigitalInput auto1Input = new DigitalInput(DIOMapping.AUTON_1_INPUT);
   private DigitalInput auto2Input = new DigitalInput(DIOMapping.AUTON_2_INPUT);
@@ -28,10 +28,13 @@ public class Sensors extends SubsystemBase {
   private DigitalInput autoAllianceInput = new DigitalInput(DIOMapping.AUTON_ALLIANCE_INPUT);
   // Pixie Sensor
   private DutyCycleEncoder pixySensorEncoer = new DutyCycleEncoder(DIOMapping.PIXY_SENSOR);
+  // Other "Fake" Sensors
+  private boolean isFieldCentric;
+  private double speedMultiplier;
+  private static Sensors instance;
 
   public Sensors() {
     // Set the default delivery method to Launcher.
-    // deliverySelector = true;
     isFieldCentric = true;
     speedMultiplier = MiscMapping.NORMAL_MULTIPLIER;
   }
@@ -51,6 +54,7 @@ public class Sensors extends SubsystemBase {
     SmartDashboard.putBoolean("Field Centric", getIsFieldCentric());
     SmartDashboard.putNumber("AutoSelector Value", getAutonSelected());
     SmartDashboard.putNumber("Pixy", getPixySensor());
+    SmartDashboard.putBoolean("Limit", getClimbLimitSwitch());
 
   }
 
@@ -61,14 +65,6 @@ public class Sensors extends SubsystemBase {
   public boolean getHandOffSensor() {
     return !handoffSensor.get();
   }
-
-  // public boolean getDeliverySelector() {
-  // return deliverySelector;
-  // }
-
-  // public void setDeliverySelector(boolean selector) {
-  // deliverySelector = selector;
-  // }
 
   public boolean getIsFieldCentric() {
     return isFieldCentric;
@@ -87,11 +83,12 @@ public class Sensors extends SubsystemBase {
   }
 
   public int getAutonSelected() {
-      SmartDashboard.putBoolean("ASensor1", !auto1Input.get());
-      SmartDashboard.putBoolean("ASensor2", !auto2Input.get());
-      SmartDashboard.putBoolean("ASensor3", !auto3Input.get());
-      SmartDashboard.putBoolean("ASensor4", !auto4Input.get());
-      SmartDashboard.putBoolean("ASensor5", !auto5Input.get());
+    SmartDashboard.putBoolean("ASensor1", !auto1Input.get());
+    SmartDashboard.putBoolean("ASensor2", !auto2Input.get());
+    SmartDashboard.putBoolean("ASensor3", !auto3Input.get());
+    SmartDashboard.putBoolean("ASensor4", !auto4Input.get());
+    SmartDashboard.putBoolean("ASensor5", !auto5Input.get());
+    SmartDashboard.putBoolean("Alliance", !autoAllianceInput.get());
 
     if (!auto1Input.get()) {
       return 1;
@@ -112,7 +109,15 @@ public class Sensors extends SubsystemBase {
     return !autoAllianceInput.get();
   }
 
-public double getPixySensor() {
+  public double getPixySensor() {
     return pixySensorEncoer.getAbsolutePosition();
+  }
+
+  public boolean getClimbLimitSwitch() {
+    if (!climbLimitSwitch1.get() || !climbLimitSwitch2.get()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
