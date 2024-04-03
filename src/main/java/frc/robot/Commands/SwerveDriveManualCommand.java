@@ -18,6 +18,7 @@ public class SwerveDriveManualCommand extends Command {
   private final DoubleSupplier forwardSupplier;
   private final DoubleSupplier strafeSupplier;
   private final DoubleSupplier rotateSupplier;
+  private final DoubleSupplier pixyTriggerSupplier;
   private final BooleanSupplier fieldRelative;
 
   public SwerveDriveManualCommand( 
@@ -26,6 +27,7 @@ public class SwerveDriveManualCommand extends Command {
     DoubleSupplier forwardSupplier, 
     DoubleSupplier strafeSupplier,
     DoubleSupplier rotateSupplier,
+    DoubleSupplier pixyTriggerSupplier,
     BooleanSupplier fieldRelative
     ) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -35,6 +37,7 @@ public class SwerveDriveManualCommand extends Command {
     this.forwardSupplier = forwardSupplier;
     this.strafeSupplier = strafeSupplier;
     this.rotateSupplier = rotateSupplier;
+    this.pixyTriggerSupplier = pixyTriggerSupplier;
     this.fieldRelative = fieldRelative;
   }
 
@@ -53,7 +56,9 @@ public class SwerveDriveManualCommand extends Command {
       strafeSupplier.getAsDouble(),
       rotateSupplier.getAsDouble(),
       fieldRelative.getAsBoolean(),
-      sensors.getSpeedMultiplier()
+      sensors.getSpeedMultiplier(), 
+      sensors.getPixySensor(),
+      pixyTriggerSupplier.getAsDouble()
     );
   }
 

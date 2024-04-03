@@ -27,7 +27,7 @@ public class Sensors extends SubsystemBase {
   private DigitalInput auto5Input = new DigitalInput(DIOMapping.AUTON_5_INPUT);
   private DigitalInput autoAllianceInput = new DigitalInput(DIOMapping.AUTON_ALLIANCE_INPUT);
   // Pixie Sensor
-  private DutyCycleEncoder pixySensorEncoer = new DutyCycleEncoder(DIOMapping.PIXY_SENSOR);
+  private DutyCycleEncoder pixySensorEncoder = new DutyCycleEncoder(DIOMapping.PIXY_SENSOR);
   // Other "Fake" Sensors
   private boolean isFieldCentric;
   private double speedMultiplier;
@@ -110,7 +110,7 @@ public class Sensors extends SubsystemBase {
   }
 
   public double getPixySensor() {
-    return pixySensorEncoer.getAbsolutePosition();
+    return pixySensorEncoder.getAbsolutePosition();
   }
 
   public boolean getClimbLimitSwitch() {

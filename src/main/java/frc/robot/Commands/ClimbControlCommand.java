@@ -33,10 +33,9 @@ public class ClimbControlCommand extends Command {
   public void execute() {
     ClimbPowerDouble = ClimbPower.getAsDouble();
     // Stop the lift from moving down (only) if either limit switch is triggered
-    // TODO: Only limit it from going down
-    if (sensors.getClimbLimitSwitch()) {
+    if (sensors.getClimbLimitSwitch() && ClimbPowerDouble < 0) {
        Climb.moveClimb(0);
-    } else {
+    } else { 
        Climb.moveClimb(ClimbPowerDouble);
     }
   }

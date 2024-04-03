@@ -111,7 +111,7 @@ public class Drivetrain extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
-  public void drive(double forward, double strafe, double rotate, boolean fieldRelative, double speedMultiplier) {
+  public void drive(double forward, double strafe, double rotate, boolean fieldRelative, double speedMultiplier, double pixySensorEncoder, double pixyTrigger) {
     SwerveModuleState[] swerveModuleStates;
 
     // Get the y speed. We are inverting this because Xbox controllers return
@@ -127,7 +127,7 @@ public class Drivetrain extends SubsystemBase {
     // positive value when we pull to the left (remember, CCW is positive in
     // mathematics). Xbox controllers return positive values when you pull to
     // the right by default.
-    final var rot = -m_rotLimiter.calculate(MathUtil.applyDeadband(rotate, 0.02)) * Drivetrain.kMaxAngularSpeed;
+    final var rot = -m_rotLimiter.calculate(MathUtil.applyDeadband(rotate - ((pixySensorEncoder - 0.5) * pixyTrigger), 0.02)) * Drivetrain.kMaxAngularSpeed;
 
     //SmartDashboard.putNumber("xSpeed", xSpeed);
     //SmartDashboard.putNumber("ySpeed", ySpeed);

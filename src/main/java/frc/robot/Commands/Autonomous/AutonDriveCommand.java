@@ -19,38 +19,33 @@ public class AutonDriveCommand extends Command {
     private static final double DriveSpeed = 96;
     private static final double DriveAcceleration = 125; // *should be in inches/s
 
-    private static final double DriveP = .02;
-    private static final double DriveI = .002;
-
+    private static final double DriveP = 0.02;
+    private static final double DriveI = 0.002;
+    private static final double DriveD = 0.0;
 
     // trapezoidal PID controller for X position control
-      private final ProfiledPIDController X_PID_Controller=
-      new ProfiledPIDController(
-         DriveP ,
-          DriveI,
-          0,
-          new TrapezoidProfile.Constraints(
-              DriveSpeed,
-              DriveAcceleration));
+    private final ProfiledPIDController X_PID_Controller = new ProfiledPIDController(
+            DriveP,
+            DriveI,
+            DriveD,
+            new TrapezoidProfile.Constraints(
+                    DriveSpeed,
+                    DriveAcceleration));
 
-// trapezoidal PID controller for X position control
-      private final ProfiledPIDController Y_PID_Controller=
-      new ProfiledPIDController(
-         DriveP ,
-          DriveI,
-          0,
-          new TrapezoidProfile.Constraints(
-              DriveSpeed,
-              DriveAcceleration));
-
-   
+    // trapezoidal PID controller for X position control
+    private final ProfiledPIDController Y_PID_Controller = new ProfiledPIDController(
+            DriveP,
+            DriveI,
+            DriveD,
+            new TrapezoidProfile.Constraints(
+                    DriveSpeed,
+                    DriveAcceleration));
 
     public AutonDriveCommand(final Drivetrain drivetrain, final Pose2d targetPose2d) {
         super();
 
         this.drivetrain = drivetrain;
         this.targetPose2d = targetPose2d;
-
 
         xController = Constants.DriveTrain.PID_X.toPIDController();
         yController = Constants.DriveTrain.PID_Y.toPIDController();
@@ -61,16 +56,18 @@ public class AutonDriveCommand extends Command {
 
     @Override
     public void initialize() {
-       
+
         X_PID_Controller.setGoal(targetPose2d.getX() * MiscMapping.xConversionInches);
-        Y_PID_Controller.setGoal(targetPose2d.getY() * MiscMapping.xConversionInches); 
-        X_PID_Controller.setTolerance(3);
-        Y_PID_Controller.setTolerance(3);
-        //yController.setSetpoint(targetPose2d.getY() * MiscMapping.yConversionInches);
+        Y_PID_Controller.setGoal(targetPose2d.getY() * MiscMapping.xConversionInches);
+        X_PID_Controller.setTolerance(6);
+        Y_PID_Controller.setTolerance(6);
+        // yController.setSetpoint(targetPose2d.getY() * MiscMapping.yConversionInches);
         angleController.setSetpoint(targetPose2d.getRotation().getRadians());
         SmartDashboard.putNumber("target X", targetPose2d.getX());
-        // SmartDashboard.putNumber("target Y", targetPose2d.getY() * MiscMapping.yConversionInches);
-        // SmartDashboard.putNumber("target Z", targetPose2d.getRotation().getRadians());
+        // SmartDashboard.putNumber("target Y", targetPose2d.getY() *
+        // MiscMapping.yConversionInches);
+        // SmartDashboard.putNumber("target Z",
+        // targetPose2d.getRotation().getRadians());
     }
 
     private double clampOutput(double val, double limit) {
@@ -81,48 +78,47 @@ public class AutonDriveCommand extends Command {
     public void execute() {
         Pose2d currentPose = drivetrain.getPose();
 
+        double outputX = X_PID_Controller.calculate(currentPose.getX());
+        double outputY = Y_PID_Controller.calculate(currentPose.getY());
 
-       double outputX = X_PID_Controller.calculate(currentPose.getX());
-       double outputY = Y_PID_Controller.calculate(currentPose.getY());
-       
-        //double outputX = X_PID_Controller.calculate(currentPose.getX(), targetPose2d.getX() * MiscMapping.xConversionInches);
-        //double outputX = xController.calculate(currentPose.getX()); 
-        //double outputX = 0;
-        //double outputY = yController.calculate(currentPose.getY());
-        //double outputY = 0;
+        // double outputX = X_PID_Controller.calculate(currentPose.getX(),
+        // targetPose2d.getX() * MiscMapping.xConversionInches);
+        // double outputX = xController.calculate(currentPose.getX());
+        // double outputX = 0;
+        // double outputY = yController.calculate(currentPose.getY());
+        // double outputY = 0;
         double outputT = angleController.calculate(currentPose.getRotation().getRadians());
-        //double outputT = 0;
-        
+        // double outputT = 0;
+
         SmartDashboard.putNumber("outputX1", outputX);
         SmartDashboard.putNumber("outputY1", outputY);
         SmartDashboard.putNumber("outputT1", outputT);
-        SmartDashboard.putNumber("Xpos", currentPose.getX()/MiscMapping.xConversionInches);
-        SmartDashboard.putNumber("Ypos", currentPose.getY()/MiscMapping.yConversionInches);
+        SmartDashboard.putNumber("Xpos", currentPose.getX() / MiscMapping.xConversionInches);
+        SmartDashboard.putNumber("Ypos", currentPose.getY() / MiscMapping.yConversionInches);
         SmartDashboard.putNumber("Tpos", currentPose.getRotation().getRadians());
 
         // drivetrain.driveRawFieldRelative
-        outputX = clampOutput(outputX, 0.8); 
-        outputY = clampOutput(outputY, 0.8); 
+        outputX = clampOutput(outputX, 0.8);
+        outputY = clampOutput(outputY, 0.8);
         outputT = clampOutput(outputT, 0.75);
 
-        //.putNumber("Clamped outputX", outputX);
-        //SmartDashboard.putNumber("Clamped outputY", outputY);
-        //SmartDashboard.putNumber("Clamped outputT", outputT);
+        // .putNumber("Clamped outputX", outputX);
+        // SmartDashboard.putNumber("Clamped outputY", outputY);
+        // SmartDashboard.putNumber("Clamped outputT", outputT);
 
-        drivetrain.drive(-outputX, -outputY, -outputT, true, 1);
-
+        drivetrain.drive(-outputX, -outputY, -outputT, true, 1, 0.5, 0);
     }
 
     @Override
     public boolean isFinished() {
-        
+
         SmartDashboard.putBoolean("x atSetpoint", X_PID_Controller.atSetpoint());
         SmartDashboard.putBoolean("y atSetpoint", Y_PID_Controller.atSetpoint());
         SmartDashboard.putBoolean("angle atSetpoint", angleController.atSetpoint());
 
         boolean condition = X_PID_Controller.atGoal() && Y_PID_Controller.atGoal() && angleController.atSetpoint();
 
-        //SmartDashboard.putBoolean("condition", condition);
+        // SmartDashboard.putBoolean("condition", condition);
 
         return condition;
     }
