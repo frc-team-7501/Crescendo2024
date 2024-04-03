@@ -20,7 +20,7 @@ public class AutonDriveCommand extends Command {
     private static final double DriveAcceleration = 125; // *should be in inches/s
 
     private static final double DriveP = 0.02;
-    private static final double DriveI = 0.002;
+    private static final double DriveI = 0.001;
     private static final double DriveD = 0.0;
 
     // trapezoidal PID controller for X position control
@@ -59,8 +59,8 @@ public class AutonDriveCommand extends Command {
 
         X_PID_Controller.setGoal(targetPose2d.getX() * MiscMapping.xConversionInches);
         Y_PID_Controller.setGoal(targetPose2d.getY() * MiscMapping.xConversionInches);
-        X_PID_Controller.setTolerance(6);
-        Y_PID_Controller.setTolerance(6);
+        X_PID_Controller.setTolerance(3);
+        Y_PID_Controller.setTolerance(3);
         // yController.setSetpoint(targetPose2d.getY() * MiscMapping.yConversionInches);
         angleController.setSetpoint(targetPose2d.getRotation().getRadians());
         SmartDashboard.putNumber("target X", targetPose2d.getX());
