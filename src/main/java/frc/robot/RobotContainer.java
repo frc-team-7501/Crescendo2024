@@ -133,6 +133,19 @@ public class RobotContainer {
     }
 
     // #endregion
+    // #region Left Defense Path - States
+    private final Command DefenseLeft = new SequentialCommandGroup(
+            new InstantCommand(
+                    () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+                    driveTrain),
+            // Launch Preloaded Note.
+            new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+            new LaunchAuton(sensors, handoff),
+            new ParallelRaceGroup(
+                    new AutonDriveCommand(driveTrain, new Pose2d(60,0, new Rotation2d((Math.PI / 180) * -45))),
+                    new WaitCommand(5))
+                    );
+    // #endregion
     // #region Four Note - States
     private final Command FourNoteStates = new SequentialCommandGroup(
             new InstantCommand(
@@ -141,28 +154,40 @@ public class RobotContainer {
             // Launch and pickup Middle Note.
             new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
             new LaunchAuton(sensors, handoff),
-            new ParallelCommandGroup(new AutonDriveCommand(driveTrain, new Pose2d(60, 0, new Rotation2d(0))),
+            new ParallelCommandGroup(
+                    new AutonDriveCommand(driveTrain, new Pose2d(60, 0, new Rotation2d(0))),
                     new ParallelRaceGroup(
-                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
-                            new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED / 2, sensors, false),
+                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                    sensors),
+                            new AutonHandoffCommand(handoff,
+                                    MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                    false),
                             new WaitCommand(3))),
             new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(0))),
             new LaunchAuton(sensors, handoff),
             // Pickup and launch Left Note
             new ParallelCommandGroup(
-                    new AutonDriveCommand(driveTrain, new Pose2d(46, 52, new Rotation2d((Math.PI / 180) * 30))),
+                    new AutonDriveCommand(driveTrain,
+                            new Pose2d(46, 52, new Rotation2d((Math.PI / 180) * 30))),
                     new ParallelRaceGroup(
-                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
-                            new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED / 2, sensors, false),
+                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                    sensors),
+                            new AutonHandoffCommand(handoff,
+                                    MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                    false),
                             new WaitCommand(3))),
             new AutonDriveCommand(driveTrain, new Pose2d(-5, 0, new Rotation2d(0))),
             new LaunchAuton(sensors, handoff),
             // Launch and pickup Right Note
             new ParallelCommandGroup(
-                    new AutonDriveCommand(driveTrain, new Pose2d(48, -54, new Rotation2d((Math.PI / 180) * -30))),
+                    new AutonDriveCommand(driveTrain,
+                            new Pose2d(48, -54, new Rotation2d((Math.PI / 180) * -30))),
                     new ParallelRaceGroup(
-                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
-                            new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED / 2, sensors, false),
+                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                    sensors),
+                            new AutonHandoffCommand(handoff,
+                                    MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                    false),
                             new WaitCommand(3))),
             new AutonDriveCommand(driveTrain, new Pose2d(-5, 0, new Rotation2d(0))),
             new LaunchAuton(sensors, handoff),
@@ -177,21 +202,30 @@ public class RobotContainer {
             new LaunchAuton(sensors, handoff),
             // Launch and pickup Right Note
             new ParallelCommandGroup(
-                    new AutonDriveCommand(driveTrain, new Pose2d(45, -54, new Rotation2d((Math.PI / 180) * -45))),
+                    new AutonDriveCommand(driveTrain,
+                            new Pose2d(45, -54, new Rotation2d((Math.PI / 180) * -45))),
                     new ParallelRaceGroup(
-                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
-                            new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED / 2, sensors, false),
+                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                    sensors),
+                            new AutonHandoffCommand(handoff,
+                                    MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                    false),
                             new WaitCommand(3))),
             new AutonDriveCommand(driveTrain, new Pose2d(-12, -25, new Rotation2d((Math.PI / 180) * -60))),
             new LaunchAuton(sensors, handoff),
             // Launch and pickup third Note
             new ParallelCommandGroup(
-                    new AutonDriveCommand(driveTrain, new Pose2d(5, -75, new Rotation2d((Math.PI / 180) * -90))),
+                    new AutonDriveCommand(driveTrain,
+                            new Pose2d(5, -75, new Rotation2d((Math.PI / 180) * -90))),
                     new ParallelCommandGroup(
-                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
-                            new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED / 2, sensors, false))),
+                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                    sensors),
+                            new AutonHandoffCommand(handoff,
+                                    MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                    false))),
             new ParallelRaceGroup(
-                    new AutonDriveCommand(driveTrain, new Pose2d(-12, -25, new Rotation2d((Math.PI / 180) * -60))),
+                    new AutonDriveCommand(driveTrain,
+                            new Pose2d(-12, -25, new Rotation2d((Math.PI / 180) * -60))),
                     new WaitCommand(5)),
             new LaunchAuton(sensors, handoff),
             new AutonDriveCommand(driveTrain, new Pose2d(40, -40, new Rotation2d((Math.PI / 180) * -60))));
@@ -205,21 +239,30 @@ public class RobotContainer {
             new LaunchAuton(sensors, handoff),
             // Launch and pickup Right Note
             new ParallelCommandGroup(
-                    new AutonDriveCommand(driveTrain, new Pose2d(45, 54, new Rotation2d((Math.PI / 180) * 45))),
+                    new AutonDriveCommand(driveTrain,
+                            new Pose2d(45, 54, new Rotation2d((Math.PI / 180) * 45))),
                     new ParallelRaceGroup(
-                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
-                            new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED / 2, sensors, false),
+                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                    sensors),
+                            new AutonHandoffCommand(handoff,
+                                    MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                    false),
                             new WaitCommand(3))),
             new AutonDriveCommand(driveTrain, new Pose2d(-15, 35, new Rotation2d((Math.PI / 180) * 60))),
             new LaunchAuton(sensors, handoff),
             // Launch and pickup third Note
             new ParallelCommandGroup(
-                    new AutonDriveCommand(driveTrain, new Pose2d(5, 80, new Rotation2d((Math.PI / 180) * 90))),
+                    new AutonDriveCommand(driveTrain,
+                            new Pose2d(5, 80, new Rotation2d((Math.PI / 180) * 90))),
                     new ParallelCommandGroup(
-                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
-                            new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED / 2, sensors, false))),
+                            new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                    sensors),
+                            new AutonHandoffCommand(handoff,
+                                    MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                    false))),
             new ParallelRaceGroup(
-                    new AutonDriveCommand(driveTrain, new Pose2d(-15, 35, new Rotation2d((Math.PI / 180) * 60))),
+                    new AutonDriveCommand(driveTrain,
+                            new Pose2d(-15, 35, new Rotation2d((Math.PI / 180) * 60))),
                     new WaitCommand(5)),
             new LaunchAuton(sensors, handoff),
             new AutonDriveCommand(driveTrain, new Pose2d(50, 50, new Rotation2d((Math.PI / 180) * 60))));
@@ -470,7 +513,7 @@ public class RobotContainer {
             () -> sensors.getIsFieldCentric());
 
     // Joystick to control Climb.
-    private final Command climbControlCommand = new ClimbControlCommand(climb, () -> m_Xbox2.getRightY(), sensors);
+    private final Command climbControlCommand = new ClimbControlCommand(climb, () -> m_Xbox2.getLeftY(), sensors);
 
     // private final InstantCommand ResetGyroYawInstantCommand = new
     // ResetGyroYawInstantCommand(
@@ -607,7 +650,8 @@ public class RobotContainer {
         // return TwoNoteRight;
         // return SimpleMoveAuton;
         // return FourNoteStates;
-        return LeftThreeNoteStates;
+        // return LeftThreeNoteStates;
         // return RightThreeNoteStates;
+        return DefenseLeft;
     }
 }
