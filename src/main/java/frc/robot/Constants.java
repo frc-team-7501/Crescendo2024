@@ -62,7 +62,7 @@ public final class Constants {
         public static final boolean BRAKE_OFF = false;
         public static final boolean FIELD_RELATIVE = true;
         public static final double MAXSPEED = 1;
-        public static final double MAXANGULARSPEED = 1;
+        public static final double MAXANGULARSPEED = 1.4;
         public static final double LAUNCH_VELOCITY = 0.7;
         public static final double LAUNCH_VELOCITY_AMP_T = 0.1;
         public static final double LAUNCH_VELOCITY_AMP_B = 0.2;
@@ -71,7 +71,7 @@ public final class Constants {
         public static final double AUTON_HANDOFF_SPEED = 0.25;
         public static final double REVERSE_INTAKE_SPEED = -1;
         public static final double REVERSE_HANDOFF_SPEED = -0.5;
-        public static final double NORMAL_MULTIPLIER = 0.3;
+        public static final double NORMAL_MULTIPLIER = 1;
         public static final double TURBO_MULTIPLIER = 1;
         public static final double xConversionInches = 39.2 / 77; // 39.2 units / 77 inches
         public static final double yConversionInches = -39.47 / 78; // negate so left is negative, right is positive

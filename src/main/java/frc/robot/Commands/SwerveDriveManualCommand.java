@@ -21,15 +21,14 @@ public class SwerveDriveManualCommand extends Command {
   private final DoubleSupplier pixyTriggerSupplier;
   private final BooleanSupplier fieldRelative;
 
-  public SwerveDriveManualCommand( 
-    final Drivetrain driveTrain, 
-    final Sensors sensors,
-    DoubleSupplier forwardSupplier, 
-    DoubleSupplier strafeSupplier,
-    DoubleSupplier rotateSupplier,
-    DoubleSupplier pixyTriggerSupplier,
-    BooleanSupplier fieldRelative
-    ) {
+  public SwerveDriveManualCommand(
+      final Drivetrain driveTrain,
+      final Sensors sensors,
+      DoubleSupplier forwardSupplier,
+      DoubleSupplier strafeSupplier,
+      DoubleSupplier rotateSupplier,
+      DoubleSupplier pixyTriggerSupplier,
+      BooleanSupplier fieldRelative) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
     this.driveTrain = driveTrain;
@@ -44,22 +43,21 @@ public class SwerveDriveManualCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  //TODO: create a stop in Drivetrain
-    //  driveTrain.stop();
+    // TODO: create a stop in Drivetrain
+    // driveTrain.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     driveTrain.drive(
-      forwardSupplier.getAsDouble(), 
-      strafeSupplier.getAsDouble(),
-      rotateSupplier.getAsDouble(),
-      fieldRelative.getAsBoolean(),
-      sensors.getSpeedMultiplier(), 
-      sensors.getPixySensor(),
-      pixyTriggerSupplier.getAsDouble()
-    );
+        (Math.signum(forwardSupplier.getAsDouble()) * Math.pow(forwardSupplier.getAsDouble(), 2)),
+        (Math.signum(strafeSupplier.getAsDouble()) * Math.pow(strafeSupplier.getAsDouble(), 2)),
+        (Math.signum(rotateSupplier.getAsDouble()) * Math.pow(rotateSupplier.getAsDouble(), 2)),
+        fieldRelative.getAsBoolean(),
+        sensors.getSpeedMultiplier(),
+        sensors.getPixySensor(),
+        pixyTriggerSupplier.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
