@@ -127,6 +127,6 @@ public final class Constants {
 
         public static final PIDConfig PID_X = new PIDConfig(0.05, 0, 0, 3);
         public static final PIDConfig PID_Y = new PIDConfig(0.05, 0, 0, 3);
-        public static final PIDConfig PID_T = new PIDConfig(1.0, 0.1, 0, Math.toRadians(8));
+        public static final PIDConfig PID_T = new PIDConfig(1.0, 0.1, 0.05, Math.toRadians(8));
     }
 }

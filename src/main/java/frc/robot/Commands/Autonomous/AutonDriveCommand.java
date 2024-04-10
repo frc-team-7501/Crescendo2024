@@ -16,7 +16,7 @@ public class AutonDriveCommand extends Command {
     private final PIDController yController;
     private final PIDController angleController;
     private final Pose2d targetPose2d;
-    private static final double DriveSpeed = 48;
+    private static final double DriveSpeed = 160; 
     private static final double DriveAcceleration = 125; // *should be in inches/s
 
     private static final double DriveP = 0.02;
@@ -31,6 +31,8 @@ public class AutonDriveCommand extends Command {
             new TrapezoidProfile.Constraints(
                     DriveSpeed,
                     DriveAcceleration));
+
+                      //X_PID_Controller.trapezoidal.Constraints(DriveSpeed, DriveAcceleration);
 
     // trapezoidal PID controller for X position control
     private final ProfiledPIDController Y_PID_Controller = new ProfiledPIDController(
