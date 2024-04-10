@@ -29,7 +29,11 @@ public class LaunchControlCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Launcher.fireLauncher(launchSpeedDoubleT, launchSpeedDoubleB);
+    if (launchSpeedDoubleT == 0) {
+      Launcher.stopLauncher(launchSpeedDoubleT, launchSpeedDoubleB);
+    } else {
+      Launcher.fireLauncher(launchSpeedDoubleT, launchSpeedDoubleB);
+    }
   }
 
   // Called once the command ends or is interrupted.

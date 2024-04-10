@@ -63,9 +63,9 @@ public final class Constants {
         public static final boolean FIELD_RELATIVE = true;
         public static final double MAXSPEED = 1;
         public static final double MAXANGULARSPEED = 1.4;
-        public static final double LAUNCH_VELOCITY = 0.7;
-        public static final double LAUNCH_VELOCITY_AMP_T = 0.1;
-        public static final double LAUNCH_VELOCITY_AMP_B = 0.2;
+        public static final double LAUNCH_VELOCITY = 4200;
+        public static final double LAUNCH_VELOCITY_AMP_T = 450;
+        public static final double LAUNCH_VELOCITY_AMP_B = 900;
         public static final double INTAKE_SPEED = 0.75;
         public static final double HANDOFF_SPEED = 0.5;
         public static final double AUTON_HANDOFF_SPEED = 0.25;
