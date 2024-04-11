@@ -282,7 +282,7 @@ public class RobotContainer {
                                                         new AutonHandoffCommand(handoff,
                                                                         MiscMapping.AUTON_HANDOFF_SPEED, sensors,
                                                                         false),
-                                                        new WaitCommand(3))),
+                                                        new WaitCommand(5))),
                         new AutonDriveCommand(driveTrain, new Pose2d(20, 28, new Rotation2d((Math.PI / 180) * -60))),
                         new LaunchAuton(sensors, handoff),
                         // Pick up middle field left most ring
@@ -295,7 +295,7 @@ public class RobotContainer {
                                                         new AutonHandoffCommand(handoff,
                                                                         MiscMapping.AUTON_HANDOFF_SPEED, sensors,
                                                                         false),
-                                                        new WaitCommand(5))),
+                                                        new WaitCommand(8))),
                         new AutonDriveCommand(driveTrain, new Pose2d(40, 28, new Rotation2d((Math.PI / 180) * -60))),
                         new LaunchAuton(sensors, handoff),
                         new ParallelCommandGroup(
@@ -324,7 +324,7 @@ public class RobotContainer {
                                                         new AutonHandoffCommand(handoff,
                                                                         MiscMapping.AUTON_HANDOFF_SPEED, sensors,
                                                                         false),
-                                                        new WaitCommand(3))),
+                                                        new WaitCommand(5))),
                         new AutonDriveCommand(driveTrain, new Pose2d(20, -28, new Rotation2d((Math.PI / 180) * 60))),
                         new LaunchAuton(sensors, handoff),
                         //Pull around stage
@@ -344,7 +344,7 @@ public class RobotContainer {
                                                         new AutonHandoffCommand(handoff,
                                                                         MiscMapping.AUTON_HANDOFF_SPEED, sensors,
                                                                         false),
-                                                        new WaitCommand(5))),
+                                                        new WaitCommand(8))),
                         //Pull around stage
                         new ParallelRaceGroup(
                                         new AutonDriveCommand(driveTrain,
@@ -375,27 +375,27 @@ public class RobotContainer {
                                                         new AutonHandoffCommand(handoff,
                                                                         MiscMapping.AUTON_HANDOFF_SPEED, sensors,
                                                                         false),
-                                                        new WaitCommand(2))),
+                                                        new WaitCommand(3))),
                         new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(0))),
                         new LaunchAuton(sensors, handoff),
                         //Intermediate point under truss
                         new ParallelRaceGroup(
                                         new AutonDriveCommand(driveTrain, new Pose2d(100, 20, new Rotation2d(0))),
-                                        new WaitCommand(2)),
+                                        new WaitCommand(5)),
                         //Pickup center note
                         new ParallelRaceGroup(
                                         new AutonDriveCommand(driveTrain, new Pose2d(270, 50, new Rotation2d(0))), 
                                         new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
                                         new AutonHandoffCommand(handoff, MiscMapping.AUTON_HANDOFF_SPEED, sensors,false),
-                                        new WaitCommand(4)),
+                                        new WaitCommand(5)),
                         //Intermediate point under truss
                         new ParallelRaceGroup(
                                         new AutonDriveCommand(driveTrain, new Pose2d(140, -10, new Rotation2d(0))),
-                                        new WaitCommand(3)),
+                                        new WaitCommand(5)),
                         //Return to launch position
                         new ParallelRaceGroup(
                                         new AutonDriveCommand(driveTrain, new Pose2d(10, 0, new Rotation2d(0))),
-                                        new WaitCommand(3)),
+                                        new WaitCommand(5)),
                         //Launch Final Ring
                         new LaunchAuton(sensors, handoff),
                         new AutonDriveCommand(driveTrain, new Pose2d(80, 0, new Rotation2d(0)))
@@ -422,19 +422,19 @@ public class RobotContainer {
                                                         new AutonHandoffCommand(handoff,
                                                                         MiscMapping.AUTON_HANDOFF_SPEED, sensors,
                                                                         false),
-                                                        new WaitCommand(2))),
+                                                        new WaitCommand(4))),
                         new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
                         // Pull around stage
                         new ParallelRaceGroup(
                                         new AutonDriveCommand(driveTrain, new Pose2d(240, -10, new Rotation2d(0))),
-                                        new WaitCommand(2)),
+                                        new WaitCommand(4)),
                         new ParallelRaceGroup(
                                         new AutonDriveCommand(driveTrain, new Pose2d(80, -10, new Rotation2d(0))),
-                                        new WaitCommand(2)),
+                                        new WaitCommand(4)),
                         //Return to launch position
                         new ParallelRaceGroup(
                                         new AutonDriveCommand(driveTrain, new Pose2d(40, 28, new Rotation2d((Math.PI / 180) * -60))),
-                                        new WaitCommand(2)),
+                                        new WaitCommand(4)),
                         //Launch Pot shot
                         new LaunchAuton(sensors, handoff),
                         new AutonLauncherCommand(launcher, 0)
@@ -463,19 +463,19 @@ public class RobotContainer {
                                                         new AutonHandoffCommand(handoff,
                                                                         MiscMapping.AUTON_HANDOFF_SPEED, sensors,
                                                                         false),
-                                                        new WaitCommand(2))),
+                                                        new WaitCommand(3))),
                         new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
                         // Pull around stage
                         new ParallelRaceGroup(
                                         new AutonDriveCommand(driveTrain, new Pose2d(200, 100, new Rotation2d(0))),
-                                        new WaitCommand(2)),
+                                        new WaitCommand(3)),
                         new ParallelRaceGroup(
                                         new AutonDriveCommand(driveTrain, new Pose2d(100, 60, new Rotation2d(0))),
-                                        new WaitCommand(1)),
+                                        new WaitCommand(3)),
                         //Return to launch position
                         new ParallelRaceGroup(
                                         new AutonDriveCommand(driveTrain, new Pose2d(40, 28, new Rotation2d((Math.PI / 180) * -60))),
-                                        new WaitCommand(2)),
+                                        new WaitCommand(4)),
                         //Launch Pot shot
                         new LaunchAuton(sensors, handoff),
                         new AutonLauncherCommand(launcher, 0)
