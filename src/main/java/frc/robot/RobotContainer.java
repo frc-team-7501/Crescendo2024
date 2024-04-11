@@ -49,8 +49,7 @@ public class RobotContainer {
 
         ////////////////////////////////
         // #region [ AUTON COMMANDS ]
-        // #region Placeholder
-        // Auton placeholder
+   
         // #region DefaultAuton - DO NOT USE, NOT TESTED
         private final Command DefaultAuton = new SequentialCommandGroup(
                         // Spin up launcher (1.5 seconds)
@@ -125,16 +124,22 @@ public class RobotContainer {
                         super(
                                         new WaitCommand(0.25),
                                         // Fire for 1.0 second
-                                        new AutonHandoffCommand(handoff, MiscMapping.HANDOFF_SPEED, sensors, true),
+                                        new AutonHandoffCommand(handoff, MiscMapping.Launch_HANDOFF_SPEED, sensors, true),
                                         new WaitCommand(0.5),
                                         // Stop launcher/handoff after fire
                                         new AutonHandoffCommand(handoff, 0.0, sensors, true));
                 }
         }
-
         // #endregion
-        // #region Four Note - States
-        private final Command FourNoteStates = new SequentialCommandGroup(
+
+       
+
+
+// Worlds auton paths
+
+        // Near field paths (no center field)
+        // #region Four Note - Worlds
+        private final Command FourNoteShort = new SequentialCommandGroup(
                         new InstantCommand(
                                         () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
                                         driveTrain),
@@ -180,8 +185,8 @@ public class RobotContainer {
                         new LaunchAuton(sensors, handoff),
                         new AutonDriveCommand(driveTrain, new Pose2d(60, 0, new Rotation2d(0))));
         // #endregion
-        // #region Left Three Note - States
-        private final Command LeftThreeNoteStates = new SequentialCommandGroup(
+        // #region Left Three Note - Worlds
+        private final Command LeftThreeNoteShort = new SequentialCommandGroup(
                         new InstantCommand(
                                         () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
                                         driveTrain),
@@ -217,8 +222,8 @@ public class RobotContainer {
                         new LaunchAuton(sensors, handoff),
                         new AutonDriveCommand(driveTrain, new Pose2d(40, -40, new Rotation2d((Math.PI / 180) * -60))));
         // #endregion
-        // #region Right Three Note - States
-        private final Command RightThreeNoteStates = new SequentialCommandGroup(
+        // #region Right Three Note - Worlds
+        private final Command RightThreeNoteShort = new SequentialCommandGroup(
                         new InstantCommand(
                                         () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
                                         driveTrain),
@@ -254,36 +259,234 @@ public class RobotContainer {
                         new LaunchAuton(sensors, handoff),
                         new AutonDriveCommand(driveTrain, new Pose2d(50, 50, new Rotation2d((Math.PI / 180) * 60))));
         // #endregion
-        // #region TwoNoteAuton
-        private final Command TwoNoteAuton = new SequentialCommandGroup(
+
+        // Red Alliance Paths
+        // #region Right Amp Red Long - Worlds
+        private final Command RightAmpRedLong = new SequentialCommandGroup(
                         new InstantCommand(
                                         () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
                                         driveTrain),
+                        // Turn and launch into speaker
                         new ParallelCommandGroup(
-                                        new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
-                                        new LaunchAuton(sensors, handoff)),
-                        // Spin intake and handoff until a Note is in the launcher AND drive.
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(20, 28, new Rotation2d((Math.PI / 180) * -60))),
+                                        new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY)),
+                        new LaunchAuton(sensors, handoff),
+                        // Pick up second note
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(85, 15, new Rotation2d((Math.PI / 180) * -20))),
+                                        new ParallelRaceGroup(
+                                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                                                        sensors),
+                                                        new AutonHandoffCommand(handoff,
+                                                                        MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                                                        false),
+                                                        new WaitCommand(3))),
+                        new AutonDriveCommand(driveTrain, new Pose2d(20, 28, new Rotation2d((Math.PI / 180) * -60))),
+                        new LaunchAuton(sensors, handoff),
+                        // Pick up middle field left most ring
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(270, -10, new Rotation2d((Math.PI / 180) * -20))),
+                                        new ParallelRaceGroup(
+                                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                                                        sensors),
+                                                        new AutonHandoffCommand(handoff,
+                                                                        MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                                                        false),
+                                                        new WaitCommand(5))),
+                        new AutonDriveCommand(driveTrain, new Pose2d(40, 28, new Rotation2d((Math.PI / 180) * -60))),
+                        new LaunchAuton(sensors, handoff),
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(85, 15, new Rotation2d((Math.PI / 180) * 0))),
+                                        new AutonLauncherCommand(launcher, 0)));
+        // #endregion
+        // #region Left Source Red Long - Worlds
+        private final Command LeftSourceRedLong = new SequentialCommandGroup(
+                        new InstantCommand(
+                                        () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+                                        driveTrain),
+                        // Turn and launch into speaker
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(20, -28, new Rotation2d((Math.PI / 180) * 60))),
+                                        new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY)),
+                        new LaunchAuton(sensors, handoff),
+                        // Pick up second note
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(85, -15, new Rotation2d((Math.PI / 180) * 20))),
+                                        new ParallelRaceGroup(
+                                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                                                        sensors),
+                                                        new AutonHandoffCommand(handoff,
+                                                                        MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                                                        false),
+                                                        new WaitCommand(3))),
+                        new AutonDriveCommand(driveTrain, new Pose2d(20, -28, new Rotation2d((Math.PI / 180) * 60))),
+                        new LaunchAuton(sensors, handoff),
+                        //Pull around stage
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(200, 100, new Rotation2d((Math.PI / 180) * 0))),
+                                        new WaitCommand(3)),
+
+
+                        // Pick up middle field second to right most ring
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(270, 40, new Rotation2d((Math.PI / 180) * -30))),
+                                        new ParallelRaceGroup(
+                                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                                                        sensors),
+                                                        new AutonHandoffCommand(handoff,
+                                                                        MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                                                        false),
+                                                        new WaitCommand(5))),
+                        //Pull around stage
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(200, 100, new Rotation2d((Math.PI / 180) * 0))),
+                                        new WaitCommand(3)),
+                        //Return and launch
+                        new AutonDriveCommand(driveTrain, new Pose2d(40, -28, new Rotation2d((Math.PI / 180) * 60))),
+                        new LaunchAuton(sensors, handoff),
+                        //Drive over line
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(85, -15, new Rotation2d((Math.PI / 180) * 0))),
+                                        new AutonLauncherCommand(launcher, 0)));
+        // #endregion
+        // #region Center Red Long - Worlds
+        private final Command RedCenterLong = new SequentialCommandGroup(
+                        new InstantCommand(
+                                        () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+                                        driveTrain),
+                        // Launch and pickup Middle Note.
+                        new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+                        new LaunchAuton(sensors, handoff),
                         new ParallelCommandGroup(
                                         new AutonDriveCommand(driveTrain, new Pose2d(60, 0, new Rotation2d(0))),
-
-                                        new SequentialCommandGroup(
-                                                        new ParallelCommandGroup(
-                                                                        new AutonIntakeCommand(intake,
-                                                                                        MiscMapping.INTAKE_SPEED,
-                                                                                        sensors),
-                                                                        new AutonHandoffCommand(handoff,
-                                                                                        MiscMapping.HANDOFF_SPEED / 2,
-                                                                                        sensors, false)),
-
-                                                        // Stop handoff once Note is in-place.
-                                                        new AutonHandoffCommand(handoff, 0.0, sensors, false))),
-                        // Move back to the center position and fire the Launcher.
-                        new SequentialCommandGroup(
-                                        new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(0))),
-                                        new LaunchAuton(sensors, handoff)));
-
+                                        new ParallelRaceGroup(
+                                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                                                        sensors),
+                                                        new AutonHandoffCommand(handoff,
+                                                                        MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                                                        false),
+                                                        new WaitCommand(2))),
+                        new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(0))),
+                        new LaunchAuton(sensors, handoff),
+                        //Intermediate point under truss
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(100, 20, new Rotation2d(0))),
+                                        new WaitCommand(2)),
+                        //Pickup center note
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(270, 50, new Rotation2d(0))), 
+                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
+                                        new AutonHandoffCommand(handoff, MiscMapping.AUTON_HANDOFF_SPEED, sensors,false),
+                                        new WaitCommand(4)),
+                        //Intermediate point under truss
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(140, -10, new Rotation2d(0))),
+                                        new WaitCommand(3)),
+                        //Return to launch position
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(10, 0, new Rotation2d(0))),
+                                        new WaitCommand(3)),
+                        //Launch Final Ring
+                        new LaunchAuton(sensors, handoff),
+                        new AutonDriveCommand(driveTrain, new Pose2d(80, 0, new Rotation2d(0)))
+                    
+);
         // #endregion
-        // #region Left Amp Blue Long - States
+        // #region Right Amp Red Defence - Worlds
+        private final Command RightAmpRedDefense = new SequentialCommandGroup(
+                        new InstantCommand(
+                                        () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+                                        driveTrain),
+                        // Knock first ring out of position
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(270, -10, new Rotation2d(0))),
+                                        new LaunchAuton(sensors, handoff),
+                                        new AutonLauncherCommand(launcher, 500)),
+                        new AutonDriveCommand(driveTrain, new Pose2d(270, 50, new Rotation2d((Math.PI / 180) * 45))),
+                        //Knock second ring out of position and pick up third
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(270, 100, new Rotation2d((Math.PI / 180) * 90))),
+                                        new ParallelRaceGroup(
+                                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                                                        sensors),
+                                                        new AutonHandoffCommand(handoff,
+                                                                        MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                                                        false),
+                                                        new WaitCommand(2))),
+                        new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+                        // Pull around stage
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(240, -10, new Rotation2d(0))),
+                                        new WaitCommand(2)),
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(80, -10, new Rotation2d(0))),
+                                        new WaitCommand(2)),
+                        //Return to launch position
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(40, 28, new Rotation2d((Math.PI / 180) * -60))),
+                                        new WaitCommand(2)),
+                        //Launch Pot shot
+                        new LaunchAuton(sensors, handoff),
+                        new AutonLauncherCommand(launcher, 0)
+
+                        
+       
+        );
+        // #endregion
+        // #region Left Source Red Defence - Worlds
+        private final Command LeftSourceRedDefense = new SequentialCommandGroup(
+                        new InstantCommand(
+                                        () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+                                        driveTrain),
+                        // Knock first ring out of position
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(270, 100, new Rotation2d(0))),
+                                        new LaunchAuton(sensors, handoff),
+                                        new AutonLauncherCommand(launcher, 500)),
+                        new AutonDriveCommand(driveTrain, new Pose2d(270, 30, new Rotation2d((Math.PI / 180) * 45))),
+                        //Knock second ring out of position and pick up third
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(270, -40, new Rotation2d((Math.PI / 180) * 90))),
+                                        new ParallelRaceGroup(
+                                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                                                        sensors),
+                                                        new AutonHandoffCommand(handoff,
+                                                                        MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                                                        false),
+                                                        new WaitCommand(2))),
+                        new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+                        // Pull around stage
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(200, 100, new Rotation2d(0))),
+                                        new WaitCommand(2)),
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(100, 60, new Rotation2d(0))),
+                                        new WaitCommand(1)),
+                        //Return to launch position
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(40, 28, new Rotation2d((Math.PI / 180) * -60))),
+                                        new WaitCommand(2)),
+                        //Launch Pot shot
+                        new LaunchAuton(sensors, handoff),
+                        new AutonLauncherCommand(launcher, 0)
+
+                        
+       
+        );
+        // #endregion
+
+        // Blue Alliance Paths
+        // #region Left Amp Blue Long - Worlds
         private final Command LeftAmpBlueLong = new SequentialCommandGroup(
                         new InstantCommand(
                                         () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
@@ -325,51 +528,193 @@ public class RobotContainer {
                                                         new Pose2d(85, -15, new Rotation2d((Math.PI / 180) * 0))),
                                         new AutonLauncherCommand(launcher, 0)));
         // #endregion
-        // #region Left Amp Blue Defence - States
+        // #region Right Source Blue Long - Worlds
+        private final Command RightSourceBlueLong = new SequentialCommandGroup(
+                        new InstantCommand(
+                                        () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+                                        driveTrain),
+                        // Turn and launch into speaker
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(20, 28, new Rotation2d((Math.PI / 180) * -60))),
+                                        new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY)),
+                        new LaunchAuton(sensors, handoff),
+                        // Pick up second note
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(85, 15, new Rotation2d((Math.PI / 180) * -20))),
+                                        new ParallelRaceGroup(
+                                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                                                        sensors),
+                                                        new AutonHandoffCommand(handoff,
+                                                                        MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                                                        false),
+                                                        new WaitCommand(3))),
+                        new AutonDriveCommand(driveTrain, new Pose2d(20, 28, new Rotation2d((Math.PI / 180) * -60))),
+                        new LaunchAuton(sensors, handoff),
+                        //Pull around stage
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(200, -100, new Rotation2d((Math.PI / 180) * 0))),
+                                        new WaitCommand(3)),
+
+
+                        // Pick up middle field second to right most ring
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(270, -40, new Rotation2d((Math.PI / 180) * 30))),
+                                        new ParallelRaceGroup(
+                                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                                                        sensors),
+                                                        new AutonHandoffCommand(handoff,
+                                                                        MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                                                        false),
+                                                        new WaitCommand(5))),
+                        //Pull around stage
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(200, -100, new Rotation2d((Math.PI / 180) * 0))),
+                                        new WaitCommand(3)),
+                        //Return and launch
+                        new AutonDriveCommand(driveTrain, new Pose2d(40, 28, new Rotation2d((Math.PI / 180) * -60))),
+                        new LaunchAuton(sensors, handoff),
+                        //Drive over line
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain,
+                                                        new Pose2d(85, 15, new Rotation2d((Math.PI / 180) * 0))),
+                                        new AutonLauncherCommand(launcher, 0)));
+        // #endregion
+        // #region Center Blue Long - Worlds
+        private final Command BlueCenterLong = new SequentialCommandGroup(
+                        new InstantCommand(
+                                        () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+                                        driveTrain),
+                        // Launch and pickup Middle Note.
+                        new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+                        new LaunchAuton(sensors, handoff),
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(60, 0, new Rotation2d(0))),
+                                        new ParallelRaceGroup(
+                                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                                                        sensors),
+                                                        new AutonHandoffCommand(handoff,
+                                                                        MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                                                        false),
+                                                        new WaitCommand(2))),
+                        new AutonDriveCommand(driveTrain, new Pose2d(0, 0, new Rotation2d(0))),
+                        new LaunchAuton(sensors, handoff),
+                        //Intermediate point under truss
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(100, -20, new Rotation2d(0))),
+                                        new WaitCommand(2)),
+                        //Pickup center note
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(270, -50, new Rotation2d(0))), 
+                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED, sensors),
+                                        new AutonHandoffCommand(handoff, MiscMapping.AUTON_HANDOFF_SPEED, sensors,false),
+                                        new WaitCommand(4)),
+                        //Intermediate point under truss
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(140, 10, new Rotation2d(0))),
+                                        new WaitCommand(3)),
+                        //Return to launch position
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(10, 0, new Rotation2d(0))),
+                                        new WaitCommand(3)),
+                        //Launch Final Ring
+                        new LaunchAuton(sensors, handoff),
+                        new AutonDriveCommand(driveTrain, new Pose2d(80, 0, new Rotation2d(0)))
+                    
+);
+        // #endregion
+        // #region Left Amp Blue Defence - Worlds
         private final Command LeftAmpBlueDefense = new SequentialCommandGroup(
                         new InstantCommand(
                                         () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
                                         driveTrain),
-                        // Git rid of note and drive to left note to move
+                        // Knock first ring out of position
                         new ParallelCommandGroup(
                                         new AutonDriveCommand(driveTrain, new Pose2d(270, 10, new Rotation2d(0))),
                                         new LaunchAuton(sensors, handoff),
-                                        new AutonLauncherCommand(launcher, 500))
-        // Pick up second note
-        // new ParallelCommandGroup(
-        // new AutonDriveCommand(driveTrain,
-        // new Pose2d(85, -15, new Rotation2d((Math.PI / 180) * 20))),
-        // new ParallelRaceGroup(
-        // new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
-        // sensors),
-        // new AutonHandoffCommand(handoff,
-        // MiscMapping.AUTON_HANDOFF_SPEED, sensors,
-        // false),
-        // new WaitCommand(3))),
-        // new AutonDriveCommand(driveTrain, new Pose2d(20, -28, new Rotation2d((Math.PI
-        // / 180) * 60))),
-        // new LaunchAuton(sensors, handoff),
-        //// Pick up middle field left most ring
-        // new ParallelCommandGroup(
-        // new AutonDriveCommand(driveTrain,
-        // new Pose2d(270, 10, new Rotation2d((Math.PI / 180) * 20))),
-        // new ParallelRaceGroup(
-        // new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
-        // sensors),
-        // new AutonHandoffCommand(handoff,
-        // MiscMapping.AUTON_HANDOFF_SPEED, sensors,
-        // false),
-        // new WaitCommand(5))),
-        // new AutonDriveCommand(driveTrain, new Pose2d(40, -28, new Rotation2d((Math.PI
-        // / 180) * 60))),
-        // new LaunchAuton(sensors, handoff),
-        // new ParallelCommandGroup(
-        // new AutonDriveCommand(driveTrain,
-        // new Pose2d(85, -15, new Rotation2d((Math.PI / 180) * 0))),
-        // new AutonLauncherCommand(launcher, 0))
+                                        new AutonLauncherCommand(launcher, 500)),
+                        new AutonDriveCommand(driveTrain, new Pose2d(270, -50, new Rotation2d((Math.PI / 180) * -45))),
+                        //Knock second ring out of position and pick up third
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(270, -100, new Rotation2d((Math.PI / 180) * -90))),
+                                        new ParallelRaceGroup(
+                                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                                                        sensors),
+                                                        new AutonHandoffCommand(handoff,
+                                                                        MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                                                        false),
+                                                        new WaitCommand(2))),
+                        new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+                        // Pull around stage
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(240, 10, new Rotation2d(0))),
+                                        new WaitCommand(2)),
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(80, 10, new Rotation2d(0))),
+                                        new WaitCommand(2)),
+                        //Return to launch position
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(40, -28, new Rotation2d((Math.PI / 180) * 60))),
+                                        new WaitCommand(2)),
+                        //Launch Pot shot
+                        new LaunchAuton(sensors, handoff),
+                        new AutonLauncherCommand(launcher, 0)
+
+                        
+       
+        );
+        // #endregion
+        // #region Right Source Blue Defence - Worlds
+        private final Command RightSourceBlueDefense = new SequentialCommandGroup(
+                        new InstantCommand(
+                                        () -> driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d(0))),
+                                        driveTrain),
+                        // Knock first ring out of position
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(270, 100, new Rotation2d(0))),
+                                        new LaunchAuton(sensors, handoff),
+                                        new AutonLauncherCommand(launcher, 500)),
+                        new AutonDriveCommand(driveTrain, new Pose2d(270, 30, new Rotation2d((Math.PI / 180) * 45))),
+                        //Knock second ring out of position and pick up third
+                        new ParallelCommandGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(270, -40, new Rotation2d((Math.PI / 180) * 90))),
+                                        new ParallelRaceGroup(
+                                                        new AutonIntakeCommand(intake, MiscMapping.INTAKE_SPEED,
+                                                                        sensors),
+                                                        new AutonHandoffCommand(handoff,
+                                                                        MiscMapping.AUTON_HANDOFF_SPEED, sensors,
+                                                                        false),
+                                                        new WaitCommand(2))),
+                        new AutonLauncherCommand(launcher, MiscMapping.LAUNCH_VELOCITY),
+                        // Pull around stage
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(200, 100, new Rotation2d(0))),
+                                        new WaitCommand(2)),
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(100, 60, new Rotation2d(0))),
+                                        new WaitCommand(1)),
+                        //Return to launch position
+                        new ParallelRaceGroup(
+                                        new AutonDriveCommand(driveTrain, new Pose2d(40, 28, new Rotation2d((Math.PI / 180) * -60))),
+                                        new WaitCommand(2)),
+                        //Launch Pot shot
+                        new LaunchAuton(sensors, handoff),
+                        new AutonLauncherCommand(launcher, 0)
+
+                        
+       
         );
         // #endregion
 
+
+
+
+
+// Unused Auton Paths
         // #region Two Note Left - NOT USED FOR STATES
         private final Command TwoNoteLeft = new SequentialCommandGroup(
                         new InstantCommand(
@@ -507,7 +852,8 @@ public class RobotContainer {
                                                                         new Pose2d(2, -2, new Rotation2d(0))),
                                                         new LaunchAuton(sensors, handoff))));
         // #endregion
-        // #endregion
+       
+        //#endregion
         ////////////////////////////////
 
         // Create commands
@@ -533,6 +879,7 @@ public class RobotContainer {
                 climb.setDefaultCommand(climbControlCommand);
         }
 
+        // #region Button Bindings
         private void configureButtonBindings() {
 
                 // Back button on the drive controller resets gyroscope.
@@ -594,15 +941,20 @@ public class RobotContainer {
                 m_Xbox.b_LeftBumper()
                                 .onFalse(new SetIsFieldCentricInstantCommand(sensors, true));
         }
-
+        // #endregion
+       
+        // #region TeleopInit
         public void teleopInit() {
                 driveTrain.setBrakeMode(MiscMapping.BRAKE_OFF);
         }
+        // #endregion
 
+        // #region AutonomousInit
         public void autonomousInit() {
                 driveTrain.setBrakeMode(MiscMapping.BRAKE_ON);
                 driveTrain.resetYaw();
         }
+        //#endregion
 
         public Command getAutonomousCommand() {
                 // [ MAIN AUTONS ]
@@ -651,10 +1003,26 @@ public class RobotContainer {
                  * }
                  */
                 // #endregion
-                // return FourNoteStates;
-                // return LeftThreeNoteStates;
-                // return RightThreeNoteStates;
-                // return LeftAmpBlueLong;
-                return LeftAmpBlueDefense;
+               
+               
+        // Near field paths
+                // return FourNoteShort;                       // Launches preload + 3 drivers station notes
+                // return LeftThreeNoteShort;                  // Launches preload + left and center driver station notes
+                // return RightThreeNoteShort;                 // Launches preload + Right and center driver station notes
+        
+        // Red Alliance Paths
+                // return RightAmpRedLong;                      // Launches preload + amp side DS + amp side center field notes
+                // return LeftSourceRedLong;                    // Launches preload + source side DS + source side center field notew
+                // return RedCenterLong;                        // Launches preload + center DS + middle center field notes 
+                // return RightAmpRedDefense;                   // Drops preload near amp, moves two amp side center field notes, and grabs middle-center note
+                // return LeftSourceRedDefense;                 // Drops preload near sub, moves two source side CF notes, and grabs middle-center note
+
+        // Blue Alliance Paths
+                // return LeftAmpBlueLong;                      // Launches preload + amp side DS + amp side center field notes
+                // return RightSourceBlueLong;                  // Launches preload + source side DS + source side center field notes
+                // return BlueCenterLong;                       // Launches preload + center DS + middle center field notes
+                // return LeftAmpBlueDefense;                   // Drops preload near amp, moves two amp side center field notes, and grabs center-center field note
+                // return RightSourceBlueDefense;               // Drops preload near sub, moves two source side CF notes, and grabs middle-center note
+        
         }
 }
