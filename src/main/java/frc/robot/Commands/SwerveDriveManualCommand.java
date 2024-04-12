@@ -57,7 +57,8 @@ public class SwerveDriveManualCommand extends Command {
         fieldRelative.getAsBoolean(),
         sensors.getSpeedMultiplier(),
         sensors.getPixySensor(),
-        pixyTriggerSupplier.getAsDouble());
+        pixyTriggerSupplier.getAsDouble(),
+        sensors.getPhotonVisionYaw());
   }
 
   // Called once the command ends or is interrupted.

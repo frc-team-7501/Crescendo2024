@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DIOMapping;
 import frc.robot.Constants.MiscMapping;
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Sensors extends SubsystemBase {
   /** Creates a new Sensors. */
@@ -28,6 +30,11 @@ public class Sensors extends SubsystemBase {
   private DigitalInput autoAllianceInput = new DigitalInput(DIOMapping.AUTON_ALLIANCE_INPUT);
   // Pixie Sensor
   private DutyCycleEncoder pixySensorEncoder = new DutyCycleEncoder(DIOMapping.PIXY_SENSOR);
+  // Photon Vision
+  private PhotonCamera photonCamera = new PhotonCamera("Cam01"); 
+  private double photonYaw;
+  private PhotonTrackedTarget target;
+  private int targetID;
   // Other "Fake" Sensors
   private boolean isFieldCentric;
   private double speedMultiplier;
@@ -52,7 +59,7 @@ public class Sensors extends SubsystemBase {
     // SmartDashboard.putBoolean("Delivery Selector", getDeliverySelector());
     // SmartDashboard.putBoolean("Handoff Speed Sensor", getHandOffSpeedSensor());
     SmartDashboard.putBoolean("Field Centric", getIsFieldCentric());
-    SmartDashboard.putNumber("AutoSelector Value", getAutonSelected());
+    //SmartDashboard.putNumber("AutoSelector Value", getAutonSelected());
     SmartDashboard.putNumber("Pixy", getPixySensor());
     SmartDashboard.putBoolean("Limit", getClimbLimitSwitch());
 
@@ -83,12 +90,12 @@ public class Sensors extends SubsystemBase {
   }
 
   public int getAutonSelected() {
-    SmartDashboard.putBoolean("ASensor1", !auto1Input.get());
-    SmartDashboard.putBoolean("ASensor2", !auto2Input.get());
-    SmartDashboard.putBoolean("ASensor3", !auto3Input.get());
-    SmartDashboard.putBoolean("ASensor4", !auto4Input.get());
-    SmartDashboard.putBoolean("ASensor5", !auto5Input.get());
-    SmartDashboard.putBoolean("Alliance", !autoAllianceInput.get());
+    //SmartDashboard.putBoolean("ASensor1", !auto1Input.get());
+    //SmartDashboard.putBoolean("ASensor2", !auto2Input.get());
+    //SmartDashboard.putBoolean("ASensor3", !auto3Input.get());
+    //SmartDashboard.putBoolean("ASensor4", !auto4Input.get());
+    //SmartDashboard.putBoolean("ASensor5", !auto5Input.get());
+    //SmartDashboard.putBoolean("Alliance", !autoAllianceInput.get());
 
     if (!auto1Input.get()) {
       return 1;
@@ -111,6 +118,27 @@ public class Sensors extends SubsystemBase {
 
   public double getPixySensor() {
     return pixySensorEncoder.getAbsolutePosition();
+  }
+
+  public double getPhotonVisionYaw() {
+    var result = photonCamera.getLatestResult();
+    SmartDashboard.putBoolean("harTarget", result.hasTargets());
+    if (result.hasTargets()) {
+      // See's a target
+      target = result.getBestTarget();
+      targetID = target.getFiducialId();
+      SmartDashboard.putNumber("targetID", targetID);
+      SmartDashboard.putNumber("photonYaw", target.getYaw());
+      if (targetID == 5 || targetID == 6) {
+        photonYaw = target.getYaw();
+        return photonYaw;
+      } else {
+        return 0.0;
+      }
+    } else {
+      // Doesn't see a target
+      return 0.0;
+    }
   }
 
   public boolean getClimbLimitSwitch() {

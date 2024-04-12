@@ -110,9 +110,10 @@ public class Drivetrain extends SubsystemBase {
    * @param rot           Angular rate of the robot.
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
+   * @param photonYaw     If apriltag 5 or 6 is seen send the yaw
    */
   public void drive(double forward, double strafe, double rotate, boolean fieldRelative, double speedMultiplier,
-      double pixySensorEncoder, double pixyTrigger) {
+      double pixySensorEncoder, double pixyTrigger, double photonYaw) {
     SwerveModuleState[] swerveModuleStates;
 
     final double rotationOutput = rotate + ((pixySensorEncoder - 0.5) * pixyTrigger);
