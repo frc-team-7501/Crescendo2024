@@ -74,6 +74,7 @@ public final class Constants {
         public static final double REVERSE_HANDOFF_SPEED = -0.5;
         public static final double NORMAL_MULTIPLIER = 1;
         public static final double TURBO_MULTIPLIER = 1;
+        public static final double PHOTON_PITCH_GOAL = 16;
         public static final double xConversionInches = 39.2 / 77; // 39.2 units / 77 inches
         public static final double yConversionInches = -39.47 / 78; // negate so left is negative, right is positive
     }

@@ -33,6 +33,7 @@ public class Sensors extends SubsystemBase {
   // Photon Vision
   private PhotonCamera photonCamera = new PhotonCamera("Cam01"); 
   private double photonYaw;
+  private double photonPitch;
   private PhotonTrackedTarget target;
   private int targetID;
   // Other "Fake" Sensors
@@ -122,9 +123,9 @@ public class Sensors extends SubsystemBase {
 
   public double getPhotonVisionYaw() {
     var result = photonCamera.getLatestResult();
-    SmartDashboard.putBoolean("harTarget", result.hasTargets());
+    SmartDashboard.putBoolean("hasTarget", result.hasTargets());
     if (result.hasTargets()) {
-      // See's a target
+      // Sees a target
       target = result.getBestTarget();
       targetID = target.getFiducialId();
       SmartDashboard.putNumber("targetID", targetID);
@@ -132,6 +133,27 @@ public class Sensors extends SubsystemBase {
       if (targetID == 5 || targetID == 6) {
         photonYaw = target.getYaw();
         return photonYaw;
+      } else {
+        return 0.0;
+      }
+    } else {
+      // Doesn't see a target
+      return 0.0;
+    }
+  }
+
+  public double getPhotonVisionPitch() {
+    var result = photonCamera.getLatestResult();
+    SmartDashboard.putBoolean("hasTarget", result.hasTargets());
+    if (result.hasTargets()) {
+      // Sees a target
+      target = result.getBestTarget();
+      targetID = target.getFiducialId();
+      SmartDashboard.putNumber("targetID", targetID);
+      SmartDashboard.putNumber("photonPitch", target.getPitch());
+      if (targetID == 5 || targetID == 6) {
+        photonPitch = target.getPitch();
+        return photonPitch - MiscMapping.PHOTON_PITCH_GOAL;
       } else {
         return 0.0;
       }

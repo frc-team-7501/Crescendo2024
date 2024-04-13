@@ -113,19 +113,32 @@ public class Drivetrain extends SubsystemBase {
    * @param photonYaw     If apriltag 5 or 6 is seen send the yaw
    */
   public void drive(double forward, double strafe, double rotate, boolean fieldRelative, double speedMultiplier,
-      double pixySensorEncoder, double pixyTrigger, double photonYaw) {
+      double pixySensorEncoder, double pixyTrigger, double photonYaw, double photonPitch) {
     SwerveModuleState[] swerveModuleStates;
 
+    double ySpeed;
+    double xSpeed;
     final double rotationOutput = rotate + ((pixySensorEncoder - 0.5) * pixyTrigger);
-
+    
     // Get the y speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
-    final var xSpeed = -m_yspeedLimiter.calculate(MathUtil.applyDeadband(forward, 0.02)) * speedMultiplier;
+
+    if (fieldRelative) {
+      xSpeed = -m_yspeedLimiter.calculate(MathUtil.applyDeadband(forward, 0.02)) * speedMultiplier;
+     } else {
+      final double forwardOutput = forward - (photonPitch * 0.01);
+      xSpeed = -m_yspeedLimiter.calculate(MathUtil.applyDeadband(forwardOutput, 0.02)) * speedMultiplier;
+     }
 
     // Get the x speed or sideways/strafe speed. We are inverting this because
     // we want a positive value when we pull to the left. Xbox controllers
     // return positive values when you pull to the right by default.
-    final var ySpeed = -m_xspeedLimiter.calculate(MathUtil.applyDeadband(strafe, 0.02)) * speedMultiplier;
+     if (fieldRelative) {
+      ySpeed = -m_xspeedLimiter.calculate(MathUtil.applyDeadband(strafe, 0.02)) * speedMultiplier;
+     } else {
+      final double strafeOutput = strafe - (photonYaw * 0.01);
+      ySpeed = -m_xspeedLimiter.calculate(MathUtil.applyDeadband(strafeOutput, 0.02)) * speedMultiplier;
+     }
 
     // Get the rate of angular rotation. We are inverting this because we want a
     // positive value when we pull to the left (remember, CCW is positive in
